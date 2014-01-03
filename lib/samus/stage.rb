@@ -15,9 +15,9 @@ module Samus
 
     def run_command(command, env, args, dry_run = false, allow_fail = false)
       display_command(command, env, args)
-      if cmd_to_run = find_command(command)
+      if base_path = find_command(command)
         if !dry_run
-          system(env, cmd_to_run + " " + (args ? args.join(" ") : ""))
+          system(env, File.join(base_path, @stage_type, command) + " " + (args ? args.join(" ") : ""))
           if $?.to_i != 0
             puts "[E] Last command failed with #{$?}#{allow_fail ? ' but allowFail=true' : ', exiting'}."
             exit($?.to_i) unless allow_fail
