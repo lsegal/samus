@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tar cfz $__build_dir/$1 $_paths

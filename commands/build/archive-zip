@@ -1,0 +1,3 @@
+#!/bin/sh
+
+zip -qr $__build_dir/$1 $_paths

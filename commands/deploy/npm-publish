@@ -1,0 +1,3 @@
+#!/bin/sh
+
+npm publish --email=$__creds_principal --_auth=$__creds_credential ./$*

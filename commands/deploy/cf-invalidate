@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'aws-sdk-core'
+
+Aws.config[:region] = ENV['_region']
+Aws.cloudfront.create_invalidation(
+  distribution_id: ENV['_distribution'],
+  invalidation_batch: {
+    paths: {
+      quantity: ARGV.size,
+      items: ARGV },
+    caller_reference: Time.now.to_s
+  })

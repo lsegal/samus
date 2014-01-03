@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+ARGV.each do |file|
+  contents = File.read(file)
+  contents = contents.gsub(Regexp.new(ENV['_search']), ENV['_replace'])
+  File.open(file, 'w') {|f| f.write(contents) }
+end

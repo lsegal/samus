@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/samus'
+require 'optparse'
+require 'tmpdir'
+
+Samus.load_commands
+
+command = case ARGV.shift
+when 'deploy'; Samus::Deployer
+when 'build';  Samus::Builder
+end
+
+dry_run = false
+OptionParser.new do |opts|
+  opts.banner  = "Usage: samus deploy [options] <directory> [directory ...]"
+  opts.banner += "       samus build [options] <version> [build.json]"
+
+  opts.separator ""
+  opts.separator "Options:"
+  opts.on("--dry-run", "Print commands, don't run them") do |v|
+    dry_run = true
+  end
+end.parse!
+
+if command == Samus::Deployer
+  ARGV.each do |dir|
+    fail "Aborting due to missing path #{dir}" unless File.exist?(dir)
+  end
+
+  ARGV.each do |dir|
+    if File.directory?(dir)
+      command.new(dir).deploy(dry_run)
+    elsif File.file?(dir) # it has to be an archive
+      Dir.mktmpdir do |tmpdir|
+        system "tar -xzf #{dir} -C #{tmpdir}"
+        command.new(tmpdir).deploy(dry_run)
+      end
+    end
+  end
+elsif command == Samus::Builder
+  $VERSION = ARGV.shift
+  fail "Missing version" if $VERSION.nil?
+  fail "Invalid version #{$VERSION}" unless $VERSION.to_s =~ /^v?\d+/
+
+  (ARGV.empty? ? ['build.json'] : ARGV).each do |file|
+    command.new(file).build(dry_run)
+  end
+end

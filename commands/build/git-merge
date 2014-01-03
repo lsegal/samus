@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+git fetch ${_remote-origin}
+git checkout $_branch
+echo branch $_branch $(git rev-parse HEAD) >> $__restore_file
+git rebase ${_remote-origin}/$_branch
+git merge $__build_branch -m "Merge release branch into $_branch" -s recursive -Xtheirs --ff
+git checkout $__build_branch

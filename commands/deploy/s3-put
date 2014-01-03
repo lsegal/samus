@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+for f in $*; do
+  aws s3 --recursive --region $_region cp $f s3://$_bucket/$_prefix$_key
+done

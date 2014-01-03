@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+olddir=$(pwd)
+dir=$(mktemp -d -t samus)
+
+tar -xzf $* -C $dir
+
+cd $dir
+for r in $_remotes; do
+  git push $r $_refs
+done
+cd $olddir
+
+rm -rf $dir

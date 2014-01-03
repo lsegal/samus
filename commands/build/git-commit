@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+git add $*
+git commit -m "${_message-Bump version to v$_version}"
+git tag ${_tag-v$_version}
+echo tag ${_tag-v$_version} >> $__restore_file
