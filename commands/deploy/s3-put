@@ -2,5 +2,5 @@
 
 set -e
 for f in $*; do
-  aws s3 --recursive --region $_region cp $f s3://$_bucket/$_prefix$_key
+  aws s3 --recursive --acl public-read --region $_region cp $f s3://$_bucket/$_prefix$_key
 done
