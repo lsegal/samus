@@ -10,7 +10,7 @@ module Samus
 
     def initialize(build_manifest_file)
       super
-      @stage_type = 'build'
+      @stage = 'build'
       @build_manifest_file = build_manifest_file
       @build_manifest = JSON.parse(File.read(build_manifest_file).gsub('$version', $VERSION))
       @manifest = {}

@@ -6,7 +6,7 @@ module Samus
     def initialize(dir)
       super
       @dir = dir
-      @stage_type = 'deploy'
+      @stage = 'deploy'
     end
 
     def deploy(dry_run = false)
