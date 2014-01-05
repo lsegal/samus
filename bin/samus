@@ -7,6 +7,18 @@ require 'tmpdir'
 Samus.load_commands
 
 command = case ARGV.shift
+when 'show-cmd'
+  stage = ARGV.shift
+  if stage
+    name = ARGV.shift
+    if name
+      Samus::Command.new(stage, name).show_help
+    else
+      Samus::Command.list_commands(stage)
+    end
+  else
+    Samus::Command.list_commands
+  end
 when 'deploy'; Samus::Deployer
 when 'build';  Samus::Builder
 end
@@ -15,6 +27,7 @@ dry_run = false
 OptionParser.new do |opts|
   opts.banner  = "Usage: samus deploy [options] <directory> [directory ...]"
   opts.banner += "       samus build [options] <version> [build.json]"
+  opts.banner += "       samus show-cmd [stage] [name]"
 
   opts.separator ""
   opts.separator "Options:"
