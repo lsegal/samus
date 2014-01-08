@@ -54,7 +54,7 @@ module Samus
     end
 
     def run(env = {}, arguments = [], dry_run = false, allow_fail = false)
-      log_command
+      log_command(env, arguments)
       if !dry_run
         system(env, @full_path + " " + (arguments ? arguments.join(" ") : ""))
         if $?.to_i != 0
