@@ -24,6 +24,7 @@ when 'build';  Samus::Builder
 end
 
 dry_run = false
+zip_release = true
 OptionParser.new do |opts|
   opts.banner  = "Usage: samus deploy [options] <directory> [directory ...]"
   opts.banner += "       samus build [options] <version> [build.json]"
@@ -33,6 +34,11 @@ OptionParser.new do |opts|
   opts.separator "Options:"
   opts.on("--dry-run", "Print commands, don't run them") do |v|
     dry_run = true
+  end
+  if command == Samus::Builder
+    opts.on("--[no-]zip", "Zip release directory") do |zip|
+      zip_release = zip
+    end
   end
 end.parse!
 
@@ -57,6 +63,6 @@ elsif command == Samus::Builder
   fail "Invalid version #{$VERSION}" unless $VERSION.to_s =~ /^v?\d+/
 
   (ARGV.empty? ? ['build.json'] : ARGV).each do |file|
-    command.new(file).build(dry_run)
+    command.new(file).build(dry_run, zip_release)
   end
 end

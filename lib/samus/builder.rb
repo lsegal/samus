@@ -16,7 +16,7 @@ module Samus
       @manifest = {}
     end
 
-    def build(dry_run = false)
+    def build(dry_run = false, zip_release = true)
       orig_pwd = Dir.pwd
       manifest = {'version' => $VERSION, 'actions' => []}
       build_branch = "samus-release/v#{$VERSION}"
@@ -61,7 +61,7 @@ module Samus
 
         Dir.chdir(build_dir) do
           generate_manifest(manifest)
-          generate_zipfile(orig_pwd)
+          generate_release(orig_pwd, zip_release)
         end unless dry_run
       end
 
@@ -79,10 +79,15 @@ module Samus
       end
     end
 
-    def generate_zipfile(orig_pwd)
-      file = build_manifest['output'] || 'release.tar.gz'
+    def generate_release(orig_pwd, zip_release = true)
+      file = build_manifest['output'] || "release-v#{$VERSION}"
       file = File.join(orig_pwd, file)
-      system "tar cfz #{file} *"
+      if zip_release
+        file += '.tar.gz'
+        system "tar cfz #{file} *"
+      else
+        system "mkdir -p #{file} && cp -r * #{file}"
+      end
       puts "[I] Built release package: #{File.basename(file)}"
     end
 
