@@ -53,7 +53,7 @@ module Samus
           if action['deploy']
             action['deploy'] = [action['deploy']] unless action['deploy'].is_a?(Array)
             action['deploy'].each do |deploy_action|
-              deploy_action['files'] = action['files'] if action['files']
+              deploy_action['files'] ||= action['files'] if action['files']
             end
             manifest['actions'] += action['deploy']
           end
