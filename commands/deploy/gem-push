@@ -1,0 +1,3 @@
+#!/bin/sh
+
+gem push -k $__creds_credential $*
