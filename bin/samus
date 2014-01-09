@@ -60,7 +60,7 @@ if command == Samus::Deployer
 elsif command == Samus::Builder
   $VERSION = ARGV.shift
   fail "Missing version" if $VERSION.nil?
-  fail "Invalid version #{$VERSION}" unless $VERSION.to_s =~ /^v?\d+/
+  $VERSION = $VERSION.sub(/^v/, '')
 
   (ARGV.empty? ? ['build.json'] : ARGV).each do |file|
     command.new(file).build(dry_run, zip_release)
