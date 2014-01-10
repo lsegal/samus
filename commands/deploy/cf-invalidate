@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-ENV['AWS_ACCESS_KEY_ID'] = ENV['__creds_principal']
-ENV['AWS_SECRET_ACCESS_KEY'] = ENV['__creds_credential']
+ENV['AWS_ACCESS_KEY_ID'] = ENV['__creds_key']
+ENV['AWS_SECRET_ACCESS_KEY'] = ENV['__creds_secret']
 
 require 'aws-sdk-core'
 
