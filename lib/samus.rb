@@ -2,6 +2,8 @@ require_relative './samus/deployer'
 require_relative './samus/builder'
 
 module Samus
+  CONFIG_PATH = File.expand_path(ENV['SAMUS_CONFIG_PATH'] || '~/.samus')
+
   module_function
 
   def config_paths; @@config_paths end
@@ -9,11 +11,10 @@ module Samus
   @@config_paths = []
 
   def load_configuration_directory
-    config_path = File.expand_path(ENV['SAMUS_CONFIG_PATH'] || '~/.samus')
-    if File.exist?(config_path)
-      Dir.foreach(config_path) do |dir|
+    if File.exist?(CONFIG_PATH)
+      Dir.foreach(CONFIG_PATH) do |dir|
         next if dir == '.' || dir == '..'
-        dir = File.join(config_path, dir)
+        dir = File.join(CONFIG_PATH, dir)
         config_paths.unshift(dir) if File.directory?(dir)
       end
     end

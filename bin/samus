@@ -5,6 +5,19 @@ require 'optparse'
 require 'tmpdir'
 
 command = case ARGV.shift
+when 'install'
+  Dir.chdir(Samus::CONFIG_PATH) { system "git clone #{ARGV.shift}" }
+when 'update'
+  Samus.config_paths.each do |path|
+    Dir.chdir(path) do
+      if File.directory?('.git')
+        puts "[I] Updating #{path}"
+        system "git pull"
+      else
+        puts "[S] Skipping non-Git directory #{path}"
+      end
+    end
+  end
 when 'show-cmd'
   stage = ARGV.shift
   if stage
