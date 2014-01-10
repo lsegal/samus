@@ -63,15 +63,14 @@ module Samus
 
       log_command(env, arguments)
       if !dry_run
-        Dir.chdir(pwd) if pwd
-        system(env, @full_path + " " + (arguments ? arguments.join(" ") : ""))
+        exec_in_dir(pwd) do
+          system(env, @full_path + " " + (arguments ? arguments.join(" ") : ""))
+        end
         if $?.to_i != 0
           puts "[E] Last command failed with #{$?}#{allow_fail ? ' but allowFail=true' : ', exiting'}."
           exit($?.to_i) unless allow_fail
         end
       end
-    ensure
-      Dir.chdir(old_pwd)
     end
 
     def <=>(other)
@@ -79,6 +78,10 @@ module Samus
     end
 
     private
+
+    def exec_in_dir(dir, &block)
+      dir ? Dir.chdir(dir, &block) : yield
+    end
 
     def load_full_path
       if path = self.class.command_paths.find {|path| File.exist?(File.join(path, stage, name)) }
