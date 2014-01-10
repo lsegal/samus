@@ -46,8 +46,8 @@ module Samus
 
     ensure
       restore_git_repo
-      system "git checkout #{orig_branch} 2>&1 >/dev/null"
-      system "git branch -D #{build_branch} 2>&1 >/dev/null"
+      system "git checkout -q #{orig_branch}"
+      system "git branch -qD #{build_branch}"
     end
 
     private
@@ -81,12 +81,12 @@ module Samus
         type, branch, commit = *line.split(/\s+/)
         case type
         when "tag"
-          puts "[D] Removing tag #{branch}"
-          system "git tag -d #{branch} 2>&1 >/dev/null"
+          puts "[D] Removing tag #{branch}" if $DEBUG
+          system "git tag -d #{branch} >/dev/null"
         when "branch"
-          puts "[D] Restoring #{branch} to #{commit}"
-          system "git checkout #{branch} 2>&1 >/dev/null"
-          system "git reset --hard #{commit} 2>&1 >/dev/null"
+          puts "[D] Restoring #{branch} to #{commit}" if $DEBUG
+          system "git checkout -q #{branch}"
+          system "git reset -q --hard #{commit}"
         end
       end
     ensure
