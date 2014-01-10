@@ -1,5 +1,8 @@
 #!/bin/sh
 
+export AWS_ACCESS_KEY_ID=$__creds_principal
+export AWS_SECRET_ACCESS_KEY=$__creds_credential
+
 set -e
 for f in $*; do
   recursive=""
