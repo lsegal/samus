@@ -1,15 +1,15 @@
-require_relative './stage'
 require 'json'
 require 'tmpdir'
 
+require_relative './build_action'
+
 module Samus
-  class Builder < Stage
+  class Builder
     RESTORE_FILE = ".git/samus-restore"
 
     attr_reader :build_manifest
 
     def initialize(build_manifest_file)
-      super
       @stage = 'build'
       @build_manifest_file = build_manifest_file
       @build_manifest = JSON.parse(File.read(build_manifest_file).gsub('$version', $VERSION))
@@ -22,41 +22,20 @@ module Samus
       build_branch = "samus-release/v#{$VERSION}"
       orig_branch = `git symbolic-ref -q --short HEAD`.chomp
 
-      system "git checkout -b #{build_branch} 2>/dev/null"
+      system "git checkout -qb #{build_branch} 2>/dev/null"
       remove_restore_file
 
       Dir.mktmpdir do |build_dir|
-        actions.each do |action|
-          begin
-            next if action['condition'] && !eval(action['condition'])
-          rescue => e
-            puts "[E] Condition failed on #{action['action']}"
-            raise e
-          end
-
-          env = {
-            "__restore_file" => RESTORE_FILE,
-            "__build_dir" => build_dir,
-            "__build_branch" => build_branch,
-            "_version" => $VERSION
-          }
-          action['arguments'].each do |key, value|
-            env["_#{key}"] = value.gsub('$version', $VERSION)
-          end if action['arguments']
-
-          Dir.chdir(action['pwd'] || orig_pwd) do
-            add_credentials(action['creds'], env)
-            run_command(action['action'], env, action['files'],
-              dry_run, action['allowFail'] || false)
-          end if action['action']
-
-          if action['deploy']
-            action['deploy'] = [action['deploy']] unless action['deploy'].is_a?(Array)
-            action['deploy'].each do |deploy_action|
-              deploy_action['files'] ||= action['files'] if action['files']
-            end
-            manifest['actions'] += action['deploy']
-          end
+        actions.map do |action|
+          BuildAction.new(:dry_run => dry_run, :arguments => {
+            "_restore_file" => RESTORE_FILE,
+            "_build_dir" => build_dir,
+            "_build_branch" => build_branch,
+            "version" => $VERSION
+          }).load(action)
+        end.each do |action|
+          action.run
+          manifest['actions'].push(action.deploy) if action.deploy
         end
 
         Dir.chdir(build_dir) do

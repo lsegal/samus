@@ -53,15 +53,25 @@ module Samus
       puts("[C] " + e + name + (arguments ? " " + arguments.join(" ") : ""))
     end
 
-    def run(env = {}, arguments = [], dry_run = false, allow_fail = false)
+    def run(opts = {})
+      env = (opts[:arguments] || {}).inject({}) {|h, (k, v)| h["_#{k}"] = v; h }
+      arguments = opts[:files] || []
+      dry_run = opts[:dry_run] || false
+      allow_fail = opts[:allow_fail] || false
+      pwd = opts[:pwd]
+      old_pwd = Dir.pwd
+
       log_command(env, arguments)
       if !dry_run
+        Dir.chdir(pwd) if pwd
         system(env, @full_path + " " + (arguments ? arguments.join(" ") : ""))
         if $?.to_i != 0
           puts "[E] Last command failed with #{$?}#{allow_fail ? ' but allowFail=true' : ', exiting'}."
           exit($?.to_i) unless allow_fail
         end
       end
+    ensure
+      Dir.chdir(old_pwd)
     end
 
     def <=>(other)

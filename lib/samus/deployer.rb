@@ -1,25 +1,22 @@
-require_relative './stage'
 require 'json'
 
+require_relative './deploy_action'
+
 module Samus
-  class Deployer < Stage
+  class Deployer
     def initialize(dir)
-      super
       @dir = dir
       @stage = 'deploy'
     end
 
     def deploy(dry_run = false)
       Dir.chdir(@dir) do
-        actions.each do |action|
-          env = {'_version' => manifest['version']}
-          action['arguments'].each do |key, value|
-            env["_#{key}"] = value
-          end if action['arguments']
-
-          add_credentials(action['creds'], env) unless dry_run
-          run_command(action['action'], env, action['files'],
-            dry_run, action['allowFail'] || false)
+        actions.map do |action|
+          DeployAction.new(:dry_run => dry_run, :arguments => {
+            'version' => manifest['version']
+          }).load(action)
+        end.each do |action|
+          action.run
         end
       end
     end
