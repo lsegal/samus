@@ -34,8 +34,9 @@ module Samus
             "version" => $VERSION
           }).load(action)
         end.each do |action|
+          next if action.skip
           action.run
-          manifest['actions'].push(action.deploy) if action.deploy
+          manifest['actions'] += action.deploy if action.deploy
         end
 
         Dir.chdir(build_dir) do

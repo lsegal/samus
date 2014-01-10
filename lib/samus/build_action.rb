@@ -33,6 +33,7 @@ module Samus
       @deploy
     end
 
+    attr_reader :skip
     def condition=(condition)
       begin
         @skip = !eval(condition)
