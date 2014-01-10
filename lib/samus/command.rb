@@ -75,7 +75,7 @@ module Samus
         @full_path = File.join(path, stage, name)
       else
         puts "[E] Could not find command: #{name} " +
-             "(SAMUS_COMMAND_PATH=#{self.class.command_paths.join(':')})"
+             "(cmd_paths=#{self.class.command_paths.join(':')})"
         exit(1)
       end
     end

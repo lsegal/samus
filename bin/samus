@@ -4,8 +4,6 @@ require_relative '../lib/samus'
 require 'optparse'
 require 'tmpdir'
 
-Samus.load_commands
-
 command = case ARGV.shift
 when 'show-cmd'
   stage = ARGV.shift
