@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gem push -k $__creds_credential $*
+curl -X POST -H "Content-Type: application/octet-stream" -H "Authorization: $__creds_credential" --data-binary @$* https://rubygems.org/api/v1/gems
