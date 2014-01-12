@@ -42,7 +42,7 @@ module Samus
         end
       end
       Samus.error "Could not find credential: #{name} " +
-           "(SAMUS_CONFIG_PATH=#{Samus.config_paths.join(':')})"
+        "(SAMUS_CONFIG_PATH=#{Samus.config_paths.join(':')})"
     end
   end
 end

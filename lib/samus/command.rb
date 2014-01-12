@@ -88,7 +88,7 @@ module Samus
         @full_path = File.join(path, stage, name)
       else
         Samus.error "Could not find command: #{name} " +
-             "(cmd_paths=#{self.class.command_paths.join(':')})"
+          "(cmd_paths=#{self.class.command_paths.join(':')})"
       end
     end
 
