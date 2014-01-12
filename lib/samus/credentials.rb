@@ -17,8 +17,7 @@ module Samus
       if File.executable?(@file)
         data = `#{@file}`
         if $?.to_i != 0
-          puts "[E] Loading credential #{name} failed with #{$?}"
-          exit(1)
+          Samus.error "Loading credential #{name} failed with #{$?}"
         end
       else
         data = File.read(@file)
@@ -42,9 +41,8 @@ module Samus
           return
         end
       end
-      puts "[E] Could not find credential: #{name} " +
+      Samus.error "Could not find credential: #{name} " +
            "(SAMUS_CONFIG_PATH=#{Samus.config_paths.join(':')})"
-      exit(1)
     end
   end
 end

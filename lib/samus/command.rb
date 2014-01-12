@@ -87,9 +87,8 @@ module Samus
       if path = self.class.command_paths.find {|path| File.exist?(File.join(path, stage, name)) }
         @full_path = File.join(path, stage, name)
       else
-        puts "[E] Could not find command: #{name} " +
+        Samus.error "Could not find command: #{name} " +
              "(cmd_paths=#{self.class.command_paths.join(':')})"
-        exit(1)
       end
     end
 
