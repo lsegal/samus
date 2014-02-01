@@ -8,7 +8,7 @@ module Samus
       @skip = false
     end
 
-    attr_reader :deploy
+    attr_reader :publish
 
     def stage; 'build' end
 
@@ -25,12 +25,12 @@ module Samus
       super
     end
 
-    def deploy=(deploy)
-      @deploy = Array === deploy ? deploy : [deploy]
-      @deploy.each do |deploy_action|
-        deploy_action['files'] ||= @files if @files
+    def publish=(publish)
+      @publish = Array === publish ? publish : [publish]
+      @publish.each do |publish_action|
+        publish_action['files'] ||= @files if @files
       end
-      @deploy
+      @publish
     end
 
     attr_reader :skip

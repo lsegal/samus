@@ -36,7 +36,7 @@ module Samus
         end.each do |action|
           next if action.skip
           action.run
-          manifest['actions'] += action.deploy if action.deploy
+          manifest['actions'] += action.publish if action.publish
         end
 
         Dir.chdir(build_dir) do

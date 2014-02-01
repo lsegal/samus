@@ -1,18 +1,18 @@
 require 'json'
 
-require_relative './deploy_action'
+require_relative './publish_action'
 
 module Samus
-  class Deployer
+  class Publisher
     def initialize(dir)
       @dir = dir
-      @stage = 'deploy'
+      @stage = 'publish'
     end
 
-    def deploy(dry_run = false)
+    def publish(dry_run = false)
       Dir.chdir(@dir) do
         actions.map do |action|
-          DeployAction.new(:dry_run => dry_run, :arguments => {
+          PublishAction.new(:dry_run => dry_run, :arguments => {
             'version' => manifest['version']
           }).load(action)
         end.each do |action|

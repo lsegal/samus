@@ -1,4 +1,4 @@
-require_relative './samus/deployer'
+require_relative './samus/publisher'
 require_relative './samus/builder'
 
 module Samus

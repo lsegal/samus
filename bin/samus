@@ -30,16 +30,16 @@ when 'show-cmd'
   else
     Samus::Command.list_commands
   end
-when 'deploy'; Samus::Deployer
+when 'publish', 'push'; Samus::Publisher
 when 'build';  Samus::Builder
 end
 
 dry_run = false
 zip_release = true
-OptionParser.new do |opts|
-  opts.banner  = "Usage: samus deploy [options] <directory> [directory ...]"
-  opts.banner += "       samus build [options] <version> [build.json]"
-  opts.banner += "       samus show-cmd [stage] [name]"
+opts = OptionParser.new do |opts|
+  opts.banner  = "Usage: samus publish [options] <directory> [directory ...]\n"
+  opts.banner += "       samus build [options] <version> [build.json]\n"
+  opts.banner += "       samus show-cmd [stage] [name]\n"
 
   opts.separator ""
   opts.separator "Options:"
@@ -51,20 +51,21 @@ OptionParser.new do |opts|
       zip_release = zip
     end
   end
-end.parse!
+end
+opts.parse!
 
-if command == Samus::Deployer
+if command == Samus::Publisher
   ARGV.each do |dir|
     fail "Aborting due to missing path #{dir}" unless File.exist?(dir)
   end
 
   ARGV.each do |dir|
     if File.directory?(dir)
-      command.new(dir).deploy(dry_run)
+      command.new(dir).publish(dry_run)
     elsif File.file?(dir) # it has to be an archive
       Dir.mktmpdir do |tmpdir|
         system "tar -xzf #{dir} -C #{tmpdir}"
-        command.new(tmpdir).deploy(dry_run)
+        command.new(tmpdir).publish(dry_run)
       end
     end
   end
@@ -76,4 +77,7 @@ elsif command == Samus::Builder
   (ARGV.empty? ? ['build.json'] : ARGV).each do |file|
     command.new(file).build(dry_run, zip_release)
   end
+else
+  puts opts
+  exit 1
 end
