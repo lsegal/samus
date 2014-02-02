@@ -252,4 +252,4 @@ as improving the kinds of build-time tasks that are exposed.
 
 ## Copyright
 
-Samus was created by Loren Segal in 2014 and is available under BSD license.
+Samus was created by Loren Segal in 2014 and is available under MIT license.
