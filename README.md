@@ -259,7 +259,24 @@ Samus also exposes a few special variables with double underscore prefixes:
 In order to integrate with `samus show-cmd <stage> <command>` syntax, your
 command should include a file named `your-command.help.md` in the same directory
 as the command script itself. These files are Markdown-formatted files and
-should follow the same structure of the built-in command help files.
+should follow the same structure of the built-in command help files:
+
+```
+Short description of command.
+
+* Files:
+  * Description of what the command line arguments are
+
+* Arguments:
+  * argname: Documentation for argument
+```
+
+Notes:
+
+* The first line of the help file is used as the summary in the `show-cmd`
+  listing.
+* Never omit a section. If a command has no files or arguments, use "(none)"
+  as the list item text.
 
 ### Credentials
 
