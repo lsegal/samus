@@ -233,7 +233,7 @@ lines or they will not function.
 
 Commands either live in the build/ or publish/ sub-directories under the
 commands directory depending on whether they are for `samus build` or
-`samus publish`.
+`samus publish`. These are considered the respective "stages".
 
 #### Special Variables
 
