@@ -75,10 +75,7 @@ module Samus
         exec_in_dir(pwd) do
           system(env, @full_path + " " + (arguments ? arguments.join(" ") : ""))
         end
-        if $?.to_i != 0
-          puts "[E] Last command failed with #{$?}#{allow_fail ? ' but allowFail=true' : ', exiting'}."
-          exit($?.to_i) unless allow_fail
-        end
+        report_error($?, allow_fail)
       end
     end
 
@@ -87,6 +84,12 @@ module Samus
     end
 
     private
+
+    def report_error(exit_code, allow_fail)
+      return if exit_code.to_i == 0
+      puts "[E] Last command failed with #{exit_code}#{allow_fail ? ' but allowFail=true' : ', exiting'}."
+      exit(exit_code.to_i) unless allow_fail
+    end
 
     def exec_in_dir(dir, &block)
       dir ? Dir.chdir(dir, &block) : yield
