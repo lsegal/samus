@@ -4,16 +4,12 @@ module Samus
       def command_paths; @@command_paths end
 
       def list_commands(stage = nil)
-        stages = {}
-        command_paths.each do |path|
-          Dir.glob(File.join(path, '*', '*')).each do |dir|
-            type, name = *dir.split(File::SEPARATOR)[-2,2]
-            next if name =~ /\.md$/
-            next if stage && stage != type
-            (stages[type] ||= []).push(new(type, name))
-          end
-        end
+        display_commands(collect_commands(stage))
+      end
 
+      private
+
+      def display_commands(stages)
         puts "Commands:"
         puts ""
         stages.each do |type, commands|
@@ -24,6 +20,19 @@ module Samus
           end
           puts ""
         end
+      end
+
+      def collect_commands(stage)
+        stages = {}
+        command_paths.each do |path|
+          Dir.glob(File.join(path, '*', '*')).each do |dir|
+            type, name = *dir.split(File::SEPARATOR)[-2,2]
+            next if name =~ /\.md$/
+            next if stage && stage != type
+            (stages[type] ||= []).push(new(type, name))
+          end
+        end
+        stages
       end
     end
 
