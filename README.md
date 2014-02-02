@@ -1,4 +1,4 @@
-# Samus
+# Samus <a href="http://badge.fury.io/rb/samus"><img src="https://badge.fury.io/rb/samus@2x.png" alt="Gem Version" height="18"></a>
 
 Samus helps you automate the release of Open Source Software. Samus works
 through a manifest file to describe discrete steps that you typically perform
