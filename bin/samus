@@ -7,6 +7,7 @@ require 'tmpdir'
 command = case ARGV.shift
 when 'install'
   Dir.chdir(Samus::CONFIG_PATH) { system "git clone #{ARGV.shift}" }
+  exit
 when 'update'
   Samus.config_paths.each do |path|
     Dir.chdir(path) do
@@ -18,6 +19,7 @@ when 'update'
       end
     end
   end
+  exit
 when 'show-cmd'
   stage = ARGV.shift
   if stage
@@ -30,6 +32,7 @@ when 'show-cmd'
   else
     Samus::Command.list_commands
   end
+  exit
 when 'publish', 'push'; Samus::Publisher
 when 'build';  Samus::Builder
 end
