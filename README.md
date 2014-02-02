@@ -1,4 +1,4 @@
-# Samus <a href="http://badge.fury.io/rb/samus"><img src="https://badge.fury.io/rb/samus@2x.png" alt="Gem Version" height="18"></a>
+# Samus <a href="http://badge.fury.io/rb/samus"><img src="https://badge.fury.io/rb/samus@2x.png" alt="Gem Version" height="18"></a> [![Code Climate](https://codeclimate.com/github/lsegal/samus.png)](https://codeclimate.com/github/lsegal/samus)
 
 Samus helps you automate the release of Open Source Software. Samus works
 through a manifest file to describe discrete steps that you typically perform
