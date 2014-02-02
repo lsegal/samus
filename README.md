@@ -30,9 +30,9 @@ can use it for both, it's your choice.
 ### Publishing
 
 If you can handle building all of your assets on your own, you can use Samus
-just to publish your code. Create a manifest file called manifest.json and
-put it in a directory with all of your assets. The manifest file is just a
-list of discrete actions like so (minus comments):
+just to publish your code. Create a manifest file called `manifest.json` (it
+must be named this way) and put it in a directory with all of your assets. The
+manifest file is just a list of discrete actions like so (minus comments):
 
 ```js
 {
@@ -212,10 +212,11 @@ The above command creates:
 
 ### Commands
 
-Commands in Samus are just shell scripts. Samus passes all argument values
-(the keys from the "arguments" section of the manifest) in as environment
-variables with a prefixed underscore. For example, the `rake-task` command
-is just: 
+Commands in Samus are just shell scripts which execute from the workspace
+or release directory (unless overridden by the build manifest). Samus passes
+all argument values (the keys from the "arguments" section of the manifest) in
+as environment variables with a prefixed underscore. For example, the
+`rake-task` command is just:
 
 ```sh
 #!/bin/sh
@@ -224,6 +225,40 @@ rake $_task
 ```
 
 The `$_task` variable is the "task" argument from the manifest.
+
+Note that commands must be executable (`chmod +x`) and have proper shebang
+lines or they will not function.
+
+#### Stages
+
+Commands either live in the build/ or publish/ sub-directories under the
+commands directory depending on whether they are for `samus build` or
+`samus publish`.
+
+#### Special Variables
+
+In addition to exposing arguments as underscored environment variables,
+Samus also exposes a few special variables with double underscore prefixes:
+
+* `__build_dir` - this variable refers to the temporary directory that the
+  release package is being built inside of. The files inside of this directory,
+  and *only* the files inside of this directory, will be built into the release
+  archive. If you write a build-time command that produces an output file which
+  is part of the release, you should make sure to move it into this directory.
+* `__restore_file` - the restore file is a newline delimited file containing
+  branches and their original ref. All branches listed in this file will be
+  restored to the respective ref at the end of `samus build` regardless of
+  success status. If you make destructive modifications to existing branches
+  in the workspace repository, you should add the original ref for the branch
+  to this file.
+* `__creds_*` - provides key, secret, and other values loaded from credentials.
+  See Credentials section for more information on how these are set.
+
+#### Help Files
+
+In order to integrate with `samus show-cmd <stage> <command>` syntax, your
+command should include a file named `your-command.help.md` in the same directory
+as the command script itself.
 
 ### Credentials
 
@@ -251,6 +286,110 @@ These values are read in by Samus and get exposed as `$__creds_key` and
 `$__creds_secret` respectively in Samus commands. You can provide other
 metadata as well, which would be included as `$__creds_name` (for the
 line "NAME: value").
+
+## Manifest File Format
+
+The following section defines the manifest formats for the samus.json build
+manifest as well as the manifest.json stored in release packages.
+
+### Base Format
+
+The base format is defined as follows:
+
+```js
+{
+  "actions": [
+    {
+      "action": "COMMAND_NAME",   // [required] command name to execute
+      "files": ["file1", ...],    // optional list of files
+      "arguments": {              // optional map of arguments to pass to cmd
+        "key": "value",           // each key is passed in as _key in ENV
+        // ... (optional) more keys ...
+      },
+      "pwd": "path"               // optional path to execute command from
+      "credentials": "KEY",       // optional credentials to load for cmd
+    },
+    // ... (optional) more action items ...
+  ]
+}
+```
+
+All manifests include a list of "actions", known individually as action items.
+Each action item has a single required property, "action", which is the command
+to execute for the action (found in `samus show-cmd`). An optional list of
+files are passed into the command as command line arguments, and the "arguments"
+property is a map of keys to values passed in as environment variables with a
+"_" prefix (key "foo" is set as environment variable "_foo"). Optional
+credentials are loaded from the credentials directory.
+
+### Build Manifest Format
+
+The build manifest format is similar to the above but allows for two extra keys
+in each action item called "publish" and "condition".
+
+#### "publish" Property
+
+The "publish" property should contain the action item that is added to the
+final manifest.json built into the release package if the action item is
+evaluated (condition matches and command successfully executes). If a "files"
+property is set on the parent action item, that property is copied into the
+publish action by default, but it can be overridden.
+
+Here is an example build manifest showing the added use of the "publish"
+property:
+
+```js
+{
+  "actions": [
+    {
+      "action": "readme-update",
+      "files": ["README.txt"],
+      "publish": {
+        "action": "readme-publish"
+        "arguments": {
+          "host": "www.mywebsite.com"
+        },
+        "credentials": "www.mywebsite.com"
+      }
+    },
+    {
+      "action": "readme-build",
+      "files": ["README.txt"],
+      "publish": {
+        "action": "readme-publish"
+        "arguments": {
+          "files": ["README.html"], // override files property
+          "host": "www.mywebsite.com"
+        },
+        "credentials": "www.mywebsite.com"
+      }
+    }
+  ]
+
+}
+```
+
+#### "condition" Property
+
+The "condition" property is a Ruby expression that is evaluated for truthiness
+to decide if the action item should be evaluated or skipped. A common use for
+this is to take action based on the version (see "$version" variable section
+below). The following example runs an action item only for version 2.0+ of a
+release:
+
+```js
+{
+  "action": "rake-task",
+  "arguments": { "task": "assets:package" },
+  "condition": "'$version' > '2.0'"
+}
+```
+
+#### "$version" Variable
+
+A special variable "$version" is interpolated when loading the build manifest.
+This variable can appear anywhere in the JSON document, and is interpolated
+before any actions or conditions are evaluated.
 
 ## Contributing & TODO
 
