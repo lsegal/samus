@@ -22,6 +22,10 @@ module Samus
       build_branch = "samus-release/v#{$VERSION}"
       orig_branch = `git symbolic-ref -q --short HEAD`.chomp
 
+      if `git diff --shortstat 2> /dev/null | tail -n1` != ""
+        Samus.error "Repository is dirty, it is too dangerous to continue."
+      end
+
       system "git checkout -qb #{build_branch} 2>/dev/null"
       remove_restore_file
 
@@ -47,8 +51,8 @@ module Samus
 
     ensure
       restore_git_repo
-      system "git checkout -q #{orig_branch}"
-      system "git branch -qD #{build_branch}"
+      system "git checkout -q #{orig_branch} 2>/dev/null"
+      system "git branch -qD #{build_branch} 2>/dev/null"
     end
 
     private
