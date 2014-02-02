@@ -78,7 +78,7 @@ elsif command == Samus::Builder
   fail "Missing version" if $VERSION.nil?
   $VERSION = $VERSION.sub(/^v/, '')
 
-  (ARGV.empty? ? ['build.json'] : ARGV).each do |file|
+  (ARGV.empty? ? ['samus.json'] : ARGV).each do |file|
     command.new(file).build(dry_run, zip_release)
   end
 else
