@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-ARGV.each do |file|
+ARGV.map {|f| Dir.glob(f) }.flatten.each do |file|
   contents = File.read(file)
   contents = contents.gsub(Regexp.new(ENV['_search']), ENV['_replace'])
   File.open(file, 'w') {|f| f.write(contents) }

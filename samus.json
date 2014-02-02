@@ -2,7 +2,7 @@
   "actions": [
     {
       "action": "fs-sedfiles",
-      "files": ["lib/samus/version.rb"],
+      "files": ["lib/*/version.rb"],
       "arguments": {
         "search": "VERSION = ['\"](.+?)['\"]",
         "replace": "VERSION = '$version'"
@@ -10,7 +10,7 @@
     },
     {
       "action": "git-commit",
-      "files": ["lib/samus/version.rb"]
+      "files": ["lib/*/version.rb"]
     },
     {
       "action": "git-merge",
