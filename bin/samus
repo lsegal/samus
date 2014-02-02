@@ -6,6 +6,7 @@ require 'tmpdir'
 
 command = case ARGV.shift
 when 'install'
+  Dir.mkdir(Samus::CONFIG_PATH) unless File.directory?(Samus::CONFIG_PATH)
   Dir.chdir(Samus::CONFIG_PATH) { system "git clone #{ARGV.shift}" }
   exit
 when 'update'
