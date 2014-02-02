@@ -13,6 +13,14 @@ your code. That's right, Samus has a mechanism to share publishing credentials
 in a fairly secure way, so you can reliably publish releases from almost any
 machine.
 
+## Installing
+
+Samus is a RubyGem and requires Ruby 1.9.x+. Installing is as easy as typing:
+
+```sh
+$ gem install samus
+```
+
 ## Usage
 
 Samus is driven by a manifest file that describes the steps to perform when
