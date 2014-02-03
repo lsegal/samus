@@ -337,7 +337,7 @@ Each action item has a single required property, "action", which is the command
 to execute for the action (found in `samus show-cmd`). An optional list of
 files are passed into the command as command line arguments, and the "arguments"
 property is a map of keys to values passed in as environment variables with a
-"_" prefix (key "foo" is set as environment variable "_foo"). Optional
+"\_" prefix (key "foo" is set as environment variable "_foo"). Optional
 credentials are loaded from the credentials directory.
 
 ### Build Manifest Format
