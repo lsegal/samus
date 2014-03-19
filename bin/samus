@@ -40,6 +40,7 @@ end
 
 dry_run = false
 zip_release = true
+outfile = nil
 opts = OptionParser.new do |opts|
   opts.banner  = "Usage: samus publish [options] <directory> [directory ...]\n"
   opts.banner += "       samus build [options] <version> [build.json]\n"
@@ -53,6 +54,9 @@ opts = OptionParser.new do |opts|
   if command == Samus::Builder
     opts.on("--[no-]zip", "Zip release directory") do |zip|
       zip_release = zip
+    end
+    opts.on("-o", "--output", "The file (no extension) to generate") do |file|
+      outfile = file
     end
   end
 end
@@ -79,7 +83,7 @@ elsif command == Samus::Builder
   $VERSION = $VERSION.sub(/^v/, '')
 
   (ARGV.empty? ? ['samus.json'] : ARGV).each do |file|
-    command.new(file).build(dry_run, zip_release)
+    command.new(file).build(dry_run, zip_release, outfile)
   end
 else
   puts opts
