@@ -45,7 +45,7 @@ module Samus
 
         Dir.chdir(build_dir) do
           generate_manifest(manifest)
-          generate_release(orig_pwd, zip_release)
+          generate_release(orig_pwd, zip_release, outfile)
         end unless dry_run
       end
 
