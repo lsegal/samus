@@ -55,7 +55,7 @@ opts = OptionParser.new do |opts|
     opts.on("--[no-]zip", "Zip release directory") do |zip|
       zip_release = zip
     end
-    opts.on("-o", "--output", "The file (no extension) to generate") do |file|
+    opts.on("-o FILE", "--output", "The file (no extension) to generate") do |file|
       outfile = file
     end
   end
