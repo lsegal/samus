@@ -1,0 +1,3 @@
+#!/bin/sh
+
+samus publish $1
