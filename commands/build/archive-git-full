@@ -1,3 +1,5 @@
 #!/bin/sh
 
+set -e
+git gc # might as well GC before archiving .git
 tar cfz $__build_dir/$1 .git $(git ls-files)
