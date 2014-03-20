@@ -66,8 +66,9 @@ module Samus
     def generate_release(orig_pwd, zip_release = true, outfile = nil)
       file = outfile || build_manifest['output'] || "release-v#{$VERSION}"
       file = File.join(orig_pwd, file) unless file[0] == '/'
-      if zip_release
-        file += '.tar.gz'
+      file_is_zipped = file =~ /\.(tar\.gz|tgz)$/
+      if zip_release || file_is_zipped
+        file += '.tar.gz' unless file_is_zipped
         system "tar cfz #{file} *"
       else
         system "mkdir -p #{file} && cp -r * #{file}"
