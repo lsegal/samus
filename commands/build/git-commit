@@ -1,7 +1,11 @@
 #!/bin/sh
 
 set -e
+IFS='%'
+
+message=$($(dirname $0)/support/generate-commit-message.rb)
+
 git add $*
-git commit -m "${_message-Bump version to v$_version}"
+git commit -m "$message"
 git tag ${_tag-v$_version}
 echo tag ${_tag-v$_version} >> $__restore_file
