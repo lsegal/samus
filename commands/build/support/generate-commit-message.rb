@@ -6,7 +6,7 @@ end
 
 def collect_issues
   out = `git log $(git tag | tail -n 1)...HEAD -E --grep '#[0-9]+' 2>/dev/null`
-  issues = out.scan(/(#\d+)/).flatten
+  issues = out.scan(/((?:\S+\/\S+)?#\d+)/).flatten
 end
 
 message = ENV["_message"]
