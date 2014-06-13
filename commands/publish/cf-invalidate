@@ -1,16 +1,11 @@
-#!/usr/bin/env ruby
+#!/bin/sh
 
-ENV['AWS_ACCESS_KEY_ID'] = ENV['__creds_key']
-ENV['AWS_SECRET_ACCESS_KEY'] = ENV['__creds_secret']
+qty="$#"
+items=`python -c 'import sys, json; print json.dumps(sys.argv[1:])' $*`
+ref=`date`
 
-require 'aws-sdk-core'
-
-Aws.config[:region] = ENV['_region']
-Aws.cloudfront.create_invalidation(
-  distribution_id: ENV['_distribution'],
-  invalidation_batch: {
-    paths: {
-      quantity: ARGV.size,
-      items: ARGV },
-    caller_reference: Time.now.to_s
-  })
+aws configure set preview.cloudfront true
+aws cloudfront create-invalidation \
+  --region $_region \
+  --distribution-id $_distribution \
+  --invalidation-batch '{"Paths":{"Quantity":'$qty',"Items":'$items'},"CallerReference":"'$ref'"}'
