@@ -8,4 +8,4 @@ aws configure set preview.cloudfront true
 aws cloudfront create-invalidation \
   --region $_region \
   --distribution-id $_distribution \
-  --invalidation-batch '{"Paths":{"Quantity":'$qty',"Items":'$items'},"CallerReference":"'$ref'"}'
+  --invalidation-batch "{\"Paths\":{\"Quantity\":$qty,\"Items\":$items},\"CallerReference\":\"$ref\"}"
