@@ -1,5 +1,8 @@
 #!/bin/sh
 
+export AWS_ACCESS_KEY_ID=$__creds_key
+export AWS_SECRET_ACCESS_KEY=$__creds_secret
+
 qty="$#"
 items=`python -c 'import sys, json; print json.dumps(sys.argv[1:])' $*`
 ref=`date`
