@@ -19,8 +19,8 @@
       }
     },
     {
-      "action": "archive-git-full",
-      "files": ["git.tgz"],
+      "action": "git-clone",
+      "files": ["git-repo"],
       "publish": [{
         "action": "git-push",
         "arguments": {
