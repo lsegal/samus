@@ -1,4 +1,8 @@
 #!/bin/sh
 
+set -e
 git clone -q --branch ${_branch-master} \
   ${_repository-.} $__build_dir/$1 2>/dev/null
+
+# preserve all previously configured remotes for publish actions
+cp ${_repository-.}/.git/config $__build_dir/$1/.git/config
