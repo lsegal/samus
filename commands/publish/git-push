@@ -3,12 +3,11 @@
 set -e
 olddir=$(pwd)
 dir=$1
-remove_dir=""
 
 case "$dir" in
   *.tgz|*.gz)
     dir=$(mktemp -d -t samus)
-    remove_dir="1"
+    trap "rm -rf $dir" 0
     tar -xzf $* -C $dir
   ;;
 esac
@@ -18,7 +17,3 @@ for r in $_remotes; do
   git push $r $_refs
 done
 cd $olddir
-
-if [ -n "$remove_dir" ]; then
-  rm -rf $dir
-fi
