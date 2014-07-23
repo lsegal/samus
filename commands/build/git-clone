@@ -1,0 +1,4 @@
+#!/bin/sh
+
+git clone -q --branch ${_branch-master} \
+  ${_repository-.} $__build_dir/$1 2>/dev/null
