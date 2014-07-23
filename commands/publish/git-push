@@ -2,9 +2,16 @@
 
 set -e
 olddir=$(pwd)
-dir=$(mktemp -d -t samus)
+dir=$1
+remove_dir=""
 
-tar -xzf $* -C $dir
+case "$dir" in
+  *.tgz|*.gz)
+    dir=$(mktemp -d -t samus)
+    remove_dir="1"
+    tar -xzf $* -C $dir
+  ;;
+esac
 
 cd $dir
 for r in $_remotes; do
@@ -12,4 +19,6 @@ for r in $_remotes; do
 done
 cd $olddir
 
-rm -rf $dir
+if [ -n "$remove_dir" ]; then
+  rm -rf $dir
+fi
