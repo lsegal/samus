@@ -22,7 +22,7 @@ module Samus
       build_branch = "samus-release/v#{$VERSION}"
       orig_branch = `git symbolic-ref -q --short HEAD`.chomp
 
-      if `git status --porcelain` != ""
+      if `git status --porcelain --untracked-files=no`.strip != ""
         Samus.error "Repository is dirty, it is too dangerous to continue."
       end
 
