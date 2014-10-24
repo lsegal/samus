@@ -32,6 +32,7 @@
         {
           "action": "github-release",
           "credentials": "lsegal.github",
+          "files": [],
           "arguments": {
             "repository": "lsegal/samus",
             "tag": "v$version"
