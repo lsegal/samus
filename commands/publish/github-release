@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+require "json"
+require "date"
+require "net/https"
+require "uri"
+
+def fail(msg, code = 1)
+  $stderr.puts msg
+  exit code
+end
+
+def https_request(opts = {})
+  uri = URI.parse(opts[:uri])
+  key, body = opts[:key], opts[:body]
+  content_type = opts[:content_type] || "application/json"
+  method = opts[:method] || :Post
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  request = Net::HTTP.const_get(method).new(uri.request_uri)
+  request["content-type"] = "application/json"
+  request["authorization"] = "token #{key}"
+
+  if content_type == "application/json"
+    request.body = body
+  else
+    request.body_stream = body
+    request.content_length = body.size
+  end
+
+  response = http.request(request)
+  if response.code[0] != "2"
+    raise RuntimeError, response.code + " " + response.message
+  else
+    response
+  end
+end
+
+key = ENV["__creds_secret"]
+repository = ENV["_repository"]
+tag = ENV["_tag"]
+changelog = ENV["_changelog"]
+title = ENV["_title"] || "Release #{tag} - #{Time.now.to_date.to_s}"
+out_file = ENV["_out_file"]
+assets = ARGV
+
+fail "Missing `repository`" unless repository
+fail "Missing `tag`" unless tag
+
+begin
+  uri = "https://api.github.com/repos/#{repository}/releases"
+  body = JSON.generate({
+    "body" => changelog ? File.read(changelog) : "",
+    "name" => title,
+    "tag_name" => tag,
+  })
+  response = https_request uri: uri, key: key, body: body
+  json = JSON.parse(response.body)
+
+  assets.each do |asset|
+    local_name, remote_name = *asset.split(':', 2)
+    remote_name ||= local_name
+    uri = json["upload_url"].sub(/\{\?name\}$/, "?name=#{remote_name}")
+    File.open(local_name, "r") do |file|
+      begin
+        https_request uri: uri, key: key,
+          body: file, content_type: "application/octet-stream"
+      rescue => e
+        puts "Failed to upload release asset #{local_name} as #{remote_name}."
+        https_request uri: json["url"], key: key, method: :Delete, body: ""
+        raise
+      end
+    end
+  end
+
+  File.open(out_file, "w") {|f| f.write(json["url"]) } if out_file
+  puts "Created GitHub release of #{repository}@#{tag}"
+  puts "URL: #{json["url"]}"
+rescue => e
+  fail "Failed to create GitHub release of #{repository}@#{tag}: #{e.message}"
+end

@@ -21,13 +21,23 @@
     {
       "action": "git-clone",
       "files": ["git-repo"],
-      "publish": [{
-        "action": "git-push",
-        "arguments": {
-          "remotes": "origin",
-          "refs": "master v$version"
+      "publish": [
+        {
+          "action": "git-push",
+          "arguments": {
+            "remotes": "origin",
+            "refs": "master v$version"
+          }
+        },
+        {
+          "action": "github-release",
+          "credentials": "lsegal.github",
+          "arguments": {
+            "repository": "lsegal/samus",
+            "tag": "v$version"
+          }
         }
-      }]
+      ]
     },
     {
       "action": "gem-build",
