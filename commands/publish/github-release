@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require "json"
-require "date"
 require "net/https"
 require "uri"
 
@@ -41,7 +40,7 @@ key = ENV["__creds_secret"]
 repository = ENV["_repository"]
 tag = ENV["_tag"]
 changelog = ENV["_changelog"]
-title = ENV["_title"] || "Release #{tag} - #{Time.now.to_date.to_s}"
+title = ENV["_title"] || "Release #{tag}"
 out_file = ENV["_out_file"]
 assets = ARGV
 
