@@ -28,15 +28,6 @@
             "remotes": "origin",
             "refs": "master v$version"
           }
-        },
-        {
-          "action": "github-release",
-          "credentials": "lsegal.github",
-          "files": [],
-          "arguments": {
-            "repository": "lsegal/samus",
-            "tag": "v$version"
-          }
         }
       ]
     },
@@ -48,6 +39,22 @@
           "action": "gem-push",
           "files": ["*.gem"],
           "credentials": "lsegal.rubygems"
+        }
+      ]
+    },
+    {
+      "action": "changelog-parse",
+      "files": ["CHANGELOG.md"],
+      "publish": [
+        {
+          "action": "github-release",
+          "credentials": "lsegal.github",
+          "files": [],
+          "arguments": {
+            "repository": "lsegal/samus",
+            "tag": "v$version",
+            "changelog": "CHANGELOG.md"
+          }
         }
       ]
     }
