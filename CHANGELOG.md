@@ -1,3 +1,7 @@
+# 1.4.3 - May 19, 2014
+
+- Add `build/make-task` command to run a make task.
+
 # 1.4.2 - October 26, 2014
 
 - Add `build/changelog-parse` command to build ChangeLog from latest entries.
