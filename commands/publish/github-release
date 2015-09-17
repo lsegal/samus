@@ -60,7 +60,7 @@ begin
   assets.each do |asset|
     local_name, remote_name = *asset.split(':', 2)
     remote_name ||= local_name
-    uri = json["upload_url"].sub(/\{\?name\}$/, "?name=#{remote_name}")
+    uri = json["upload_url"].sub(/\{\?name,label\}$/, "?name=#{remote_name}")
     File.open(local_name, "r") do |file|
       begin
         https_request uri: uri, key: key,
