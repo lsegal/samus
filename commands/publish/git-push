@@ -6,7 +6,7 @@ dir=$1
 
 case "$dir" in
   *.tgz|*.gz)
-    dir=$(mktemp -d -t samus)
+    dir=$(mktemp -d -t samusXXXX)
     trap "rm -rf $dir" 0
     tar -xzf $* -C $dir
   ;;
