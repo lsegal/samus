@@ -12,7 +12,9 @@ module Samus
       @arguments = opts[:arguments] || {}
     end
 
-    def stage; raise NotImplementedError, 'action must define stage' end
+    def stage
+      raise NotImplementedError, 'action must define stage'
+    end
 
     def load(opts = {})
       opts.each do |key, value|
@@ -32,10 +34,10 @@ module Samus
 
     def command_options
       {
-        :arguments => @creds ? @arguments.merge(@creds.load) : @arguments,
-        :files => @files,
-        :dry_run => @dry_run,
-        :allow_fail => @allow_fail
+        arguments: @creds ? @arguments.merge(@creds.load) : @arguments,
+        files: @files,
+        dry_run: @dry_run,
+        allow_fail: @allow_fail
       }
     end
 
@@ -54,7 +56,7 @@ module Samus
     attr_writer :files
 
     def arguments=(args)
-      args.each {|k, v| @arguments[k] = v }
+      args.each { |k, v| @arguments[k] = v }
     end
   end
 end

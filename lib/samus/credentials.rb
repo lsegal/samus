@@ -2,7 +2,11 @@ module Samus
   class Credentials
     attr_reader :name
 
-    @@credentials = {}
+    class << self
+      attr_accessor :credentials
+    end
+
+    @credentials = {}
 
     def initialize(name)
       @name = name
@@ -10,7 +14,7 @@ module Samus
     end
 
     def load
-      return @@credentials[name] if @@credentials[name]
+      return self.class.credentials[name] if self.class.credentials[name]
 
       hsh = {}
       data = nil
@@ -28,7 +32,7 @@ module Samus
         hsh["_creds_#{name.strip.downcase}"] = value.strip
       end
 
-      @@credentials[name] = hsh
+      self.class.credentials[name] = hsh
     end
 
     private
@@ -41,8 +45,8 @@ module Samus
           return
         end
       end
-      Samus.error "Could not find credential: #{name} " +
-        "(SAMUS_CONFIG_PATH=#{Samus.config_paths.join(':')})"
+      Samus.error "Could not find credential: #{name} " \
+                  "(SAMUS_CONFIG_PATH=#{Samus.config_paths.join(':')})"
     end
   end
 end

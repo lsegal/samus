@@ -10,15 +10,15 @@ module Samus
 
     attr_reader :publish
 
-    def stage; 'build' end
+    def stage
+      'build'
+    end
 
     def command_options
-      super.merge(:pwd => @pwd)
+      super.merge(pwd: @pwd)
     end
 
-    def pwd=(pwd)
-      @pwd = pwd
-    end
+    attr_writer :pwd
 
     def run
       return if @skip
@@ -26,21 +26,18 @@ module Samus
     end
 
     def publish=(publish)
-      @publish = Array === publish ? publish : [publish]
+      @publish = publish.is_a?(Array) ? publish : [publish]
       @publish.each do |publish_action|
         publish_action['files'] ||= @files if @files
       end
-      @publish
     end
 
     attr_reader :skip
     def condition=(condition)
-      begin
-        @skip = !eval(condition)
-      rescue => e
-        puts "[E] Condition failed on #{@raw_options['action']}"
-        raise e
-      end
+      @skip = !eval(condition)
+    rescue StandardError => e
+      puts "[E] Condition failed on #{@raw_options['action']}"
+      raise e
     end
   end
 end

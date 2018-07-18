@@ -4,67 +4,70 @@ require_relative '../lib/samus'
 require 'optparse'
 require 'tmpdir'
 
-command = case ARGV.shift
-when 'install'
-  Dir.mkdir(Samus::CONFIG_PATH) unless File.directory?(Samus::CONFIG_PATH)
-  Dir.chdir(Samus::CONFIG_PATH) { system "git clone #{ARGV.shift}" }
-  exit
-when 'update'
-  Samus.config_paths.each do |path|
-    Dir.chdir(path) do
-      if File.directory?('.git')
-        puts "[I] Updating #{path}"
-        system "git pull"
-      else
-        puts "[S] Skipping non-Git directory #{path}"
+command =
+  case ARGV.shift
+  when 'install'
+    Dir.mkdir(Samus::CONFIG_PATH) unless File.directory?(Samus::CONFIG_PATH)
+    Dir.chdir(Samus::CONFIG_PATH) { system "git clone #{ARGV.shift}" }
+    exit
+  when 'update'
+    Samus.config_paths.each do |path|
+      Dir.chdir(path) do
+        if File.directory?('.git')
+          puts "[I] Updating #{path}"
+          system 'git pull'
+        else
+          puts "[S] Skipping non-Git directory #{path}"
+        end
       end
     end
-  end
-  exit
-when 'show-cmd'
-  stage = ARGV.shift
-  if stage
-    name = ARGV.shift
-    if name
-      Samus::Command.new(stage, name).show_help
+    exit
+  when 'show-cmd'
+    stage = ARGV.shift
+    if stage
+      name = ARGV.shift
+      if name
+        Samus::Command.new(stage, name).show_help
+      else
+        Samus::Command.list_commands(stage)
+      end
     else
-      Samus::Command.list_commands(stage)
+      Samus::Command.list_commands
     end
-  else
-    Samus::Command.list_commands
+    exit
+  when 'publish', 'push'
+    Samus::Publisher
+  when 'build'
+    Samus::Builder
   end
-  exit
-when 'publish', 'push'; Samus::Publisher
-when 'build';  Samus::Builder
-end
 
 dry_run = false
 zip_release = true
 outfile = nil
-opts = OptionParser.new do |opts|
+options = OptionParser.new do |opts|
   opts.banner  = "Usage: samus publish [options] <directory> [directory ...]\n"
   opts.banner += "       samus build [options] <version> [build.json]\n"
   opts.banner += "       samus show-cmd [stage] [name]\n"
 
-  opts.separator ""
-  opts.separator "Options:"
-  opts.on("--dry-run", "Print commands, don't run them") do |v|
+  opts.separator ''
+  opts.separator 'Options:'
+  opts.on('--dry-run', "Print commands, don't run them") do |_v|
     dry_run = true
   end
   if command == Samus::Builder
-    opts.on("--[no-]zip", "Zip release directory") do |zip|
+    opts.on('--[no-]zip', 'Zip release directory') do |zip|
       zip_release = zip
     end
-    opts.on("-o FILE", "--output", "The file (no extension) to generate") do |file|
+    opts.on('-o FILE', '--output', 'The file (no extension) to generate') do |file|
       outfile = file
     end
   end
 end
-opts.parse!
+options.parse!
 
 if command == Samus::Publisher
   ARGV.each do |dir|
-    fail "Aborting due to missing path #{dir}" unless File.exist?(dir)
+    raise "Aborting due to missing path #{dir}" unless File.exist?(dir)
   end
 
   ARGV.each do |dir|
@@ -78,9 +81,9 @@ if command == Samus::Publisher
     end
   end
 elsif command == Samus::Builder
-  $VERSION = ARGV.shift
-  fail "Missing version" if $VERSION.nil?
-  $VERSION = $VERSION.sub(/^v/, '')
+  ver = ARGV.shift
+  raise 'Missing version' if ver.nil?
+  Samus::Builder.build_version = ver.sub(/^v/, '')
 
   (ARGV.empty? ? ['samus.json'] : ARGV).each do |file|
     command.new(file).build(dry_run, zip_release, outfile)

@@ -12,12 +12,11 @@ module Samus
     def publish(dry_run = false)
       Dir.chdir(@dir) do
         actions.map do |action|
-          PublishAction.new(:dry_run => dry_run, :arguments => {
-            'version' => manifest['version']
-          }).load(action)
-        end.each do |action|
-          action.run
-        end
+          PublishAction.new(
+            dry_run: dry_run,
+            arguments: { 'version' => manifest['version'] }
+          ).load(action)
+        end.each(&:run)
       end
     end
 
