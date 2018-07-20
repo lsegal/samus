@@ -13,7 +13,12 @@ case "$dir" in
 esac
 
 cd $dir
+echo "-----BEGIN RSA PRIVATE KEY-----" > .sshkey
+echo "$__creds_secret" >> .sshkey
+echo "-----END RSA PRIVATE KEY-----" >> .sshkey
+chmod 600 .sshkey
+
 for r in $_remotes; do
-  git push $r $_refs
+  ssh-agent bash -c "ssh-add .sshkey; git push $r $_refs"
 done
 cd $olddir
