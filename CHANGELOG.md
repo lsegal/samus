@@ -1,3 +1,12 @@
+# 1.6.0 - July 19, 2018
+
+- Add support for credentials for git-push. Add a credentials file with
+  an RSA key in the format `Key: ...RSA KEY HERE...`.
+- Add experimental support for publishing via `lsegal/samus` Docker image. Use
+  `samus publish --docker project-vX.Y.Z.tar.gz` to perform commands in a
+  Docker image with the base support for all default publish commands. You must
+  have Docker installed to use this flag.
+
 # 1.4.3 - May 19, 2014
 
 - Add `build/make-task` command to run a make task.
