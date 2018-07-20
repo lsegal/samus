@@ -14,9 +14,9 @@ esac
 
 cd $dir
 echo "-----BEGIN RSA PRIVATE KEY-----" > .sshkey
-echo "$__creds_secret" >> .sshkey
+echo "$__creds_secret" | fold -w 65 >> .sshkey
 echo "-----END RSA PRIVATE KEY-----" >> .sshkey
-chmod 600 .sshkey
+chmod 400 .sshkey
 
 for r in $_remotes; do
   ssh-agent sh -c "ssh-add .sshkey; git push $r $_refs"
