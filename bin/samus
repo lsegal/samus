@@ -44,6 +44,7 @@ command =
 dry_run = false
 zip_release = true
 outfile = nil
+docker = false
 options = OptionParser.new do |opts|
   opts.banner  = "Usage: samus publish [options] <directory> [directory ...]\n"
   opts.banner += "       samus build [options] <version> [build.json]\n"
@@ -61,6 +62,10 @@ options = OptionParser.new do |opts|
     opts.on('-o FILE', '--output', 'The file (no extension) to generate') do |file|
       outfile = file
     end
+  else
+    opts.on('--docker', 'Use docker to publish') do |_v|
+      docker = true
+    end
   end
 end
 options.parse!
@@ -71,6 +76,16 @@ if command == Samus::Publisher
   end
 
   ARGV.each do |dir|
+    if docker
+      cmd = <<-COMMAND
+        docker run --rm -v "#{Dir.home}/.samus:/root/.samus"
+        -v "#{Dir.pwd}:/app" -w /app -t lsegal/samus
+        samus publish "#{dir}"
+      COMMAND
+      system(cmd.delete("\n").chomp)
+      next
+    end
+
     if File.directory?(dir)
       command.new(dir).publish(dry_run)
     elsif File.file?(dir) # it has to be an archive
