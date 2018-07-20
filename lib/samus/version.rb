@@ -1,3 +1,3 @@
 module Samus
-  VERSION = '1.6.2'.freeze
+  VERSION = '1.6.3'.freeze
 end
