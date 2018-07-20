@@ -19,6 +19,6 @@ echo "-----END RSA PRIVATE KEY-----" >> .sshkey
 chmod 600 .sshkey
 
 for r in $_remotes; do
-  ssh-agent bash -c "ssh-add .sshkey; git push $r $_refs"
+  ssh-agent sh -c "ssh-add .sshkey; git push $r $_refs"
 done
 cd $olddir
