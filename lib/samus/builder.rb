@@ -80,6 +80,7 @@ module Samus
       else
         system "mkdir -p #{file} && cp -R * #{file}"
       end
+      Samus.error "Failed to build release package" if $?.to_i != 0
       puts "[I] Built release package: #{File.basename(file)}"
     end
 
