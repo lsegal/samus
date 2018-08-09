@@ -1,3 +1,8 @@
+# 1.6.4 - August 9th, 2018
+
+- Add support for Windows portability
+- Report an error if credentials cannot be parsed.
+
 # 1.6.0 - July 19, 2018
 
 - Add support for credentials for git-push. Add a credentials file with
