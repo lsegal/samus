@@ -78,7 +78,7 @@ module Samus
         file += '.tar.gz' unless file_is_zipped
         system "tar cfz #{file} *"
       else
-        system "mkdir -p #{file} && cp -r * #{file}"
+        system "mkdir -p #{file} && cp -R * #{file}"
       end
       puts "[I] Built release package: #{File.basename(file)}"
     end
