@@ -27,11 +27,11 @@ module Samus
       build_branch = "samus-release/v#{version}"
       orig_branch = `git symbolic-ref -q --short HEAD`.chomp
 
-      if `git diff --shortstat 2> /dev/null | tail -n1` != ''
+      if `git diff --shortstat 2> #{devnull} | tail -n1` != ''
         Samus.error 'Repository is dirty, it is too dangerous to continue.'
       end
 
-      system "git checkout -qb #{build_branch} 2>/dev/null"
+      system "git checkout -qb #{build_branch} 2>#{devnull}"
       remove_restore_file
 
       Dir.mktmpdir do |build_dir|
@@ -40,6 +40,7 @@ module Samus
                             '_restore_file' => RESTORE_FILE,
                             '_build_dir' => build_dir,
                             '_build_branch' => build_branch,
+                            '_devnull' => devnull,
                             'version' => version
                           }).load(action)
         end.each do |action|
@@ -57,8 +58,8 @@ module Samus
       end
     ensure
       restore_git_repo
-      system "git checkout -q #{orig_branch} 2>/dev/null"
-      system "git branch -qD #{build_branch} 2>/dev/null"
+      system "git checkout -q #{orig_branch} 2>#{devnull}"
+      system "git branch -qD #{build_branch} 2>#{devnull}"
     end
 
     private
@@ -94,7 +95,7 @@ module Samus
         case type
         when 'tag'
           puts "[D] Removing tag #{branch}" if $DEBUG
-          system "git tag -d #{branch} >/dev/null"
+          system "git tag -d #{branch} >#{devnull}"
         when 'branch'
           puts "[D] Restoring #{branch} to #{commit}" if $DEBUG
           system "git checkout -q #{branch}"
@@ -111,6 +112,14 @@ module Samus
 
     def version
       self.class.build_version
+    end
+
+    def devnull
+      windows? ? 'NUL' : '/dev/null'
+    end
+
+    def windows?
+      ::RbConfig::CONFIG['host_os'] =~ /mingw|win32|cygwin/ ? true : false
     end
   end
 end

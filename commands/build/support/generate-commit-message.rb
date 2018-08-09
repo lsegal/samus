@@ -5,7 +5,7 @@ def word_wrap(text)
 end
 
 def collect_issues
-  out = `git log $(git describe --tags --abbrev=0)...HEAD -E --grep '#[0-9]+' 2>/dev/null`
+  out = `git log $(git describe --tags --abbrev=0)...HEAD -E --grep '#[0-9]+' 2>#{ENV['_devnull']}`
   issues = out.scan(/((?:\S+\/\S+)?#\d+)/).flatten
 end
 
