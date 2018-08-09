@@ -4,4 +4,4 @@ set -e
 bakfile=${__RESTORE_FILE}.$$.$RANDOM.bak
 mv $__RESTORE_FILE $bakfile
 trap "mv $bakfile $__RESTORE_FILE" 0
-samus build -o $__BUILD_DIR/$1 $_BUILD_VERSION ${_MANIFEST}
+ruby -S samus build -o $__BUILD_DIR/$1 $_BUILD_VERSION ${_MANIFEST}
