@@ -29,6 +29,10 @@ module Samus
 
       data.split(/\r?\n/).each do |line|
         name, value = *line.strip.split(':')
+        if value.nil?
+          Samus.error "Failed to parse credential from #{@file} (exec bit: #{File.executable?(@file)})"
+        end
+
         hsh["_creds_#{name.strip.downcase}"] = value.strip
       end
 
