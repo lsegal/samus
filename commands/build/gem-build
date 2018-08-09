@@ -1,5 +1,5 @@
 #!/bin/sh
 
 set -e
-gem build $1
-mv ${1%.gemspec}-$_version.gem $__build_dir
+ruby -S gem build $1
+mv ${1%.gemspec}-$_VERSION.gem $__BUILD_DIR

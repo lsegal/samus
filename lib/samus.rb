@@ -31,6 +31,10 @@ module Samus
     puts "[E] #{msg}"
     exit(1)
   end
+
+  def windows?
+    ::RbConfig::CONFIG['host_os'] =~ /mingw|win32|cygwin/ ? true : false
+  end
 end
 
 Samus.load_configuration_directory

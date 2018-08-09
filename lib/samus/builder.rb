@@ -37,11 +37,11 @@ module Samus
       Dir.mktmpdir do |build_dir|
         actions.map do |action|
           BuildAction.new(dry_run: dry_run, arguments: {
-                            '_restore_file' => RESTORE_FILE,
-                            '_build_dir' => build_dir,
-                            '_build_branch' => build_branch,
-                            '_devnull' => devnull,
-                            'version' => version
+                            '_RESTORE_FILE' => RESTORE_FILE,
+                            '_BUILD_DIR' => build_dir,
+                            '_BUILD_BRANCH' => build_branch,
+                            '_DEVNULL' => devnull,
+                            'VERSION' => version
                           }).load(action)
         end.each do |action|
           next if action.skip
@@ -76,9 +76,9 @@ module Samus
       file_is_zipped = file =~ /\.(tar\.gz|tgz)$/
       if zip_release || file_is_zipped
         file += '.tar.gz' unless file_is_zipped
-        system "tar cfz #{file} *"
+        system "tar cfz #{file.inspect} *"
       else
-        system "mkdir -p #{file} && cp -R * #{file}"
+        system "mkdir #{file.inspect} && cp -R * #{file.inspect}"
       end
       Samus.error "Failed to build release package" if $?.to_i != 0
       puts "[I] Built release package: #{File.basename(file)}"
@@ -116,11 +116,7 @@ module Samus
     end
 
     def devnull
-      windows? ? 'NUL' : '/dev/null'
-    end
-
-    def windows?
-      ::RbConfig::CONFIG['host_os'] =~ /mingw|win32|cygwin/ ? true : false
+      Samus.windows? ? 'NUL' : '/dev/null'
     end
   end
 end

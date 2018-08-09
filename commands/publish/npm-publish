@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npm publish --email=$__creds_key --_auth=$__creds_secret ./$*
+npm publish --email=$__CREDS_KEY --_auth=$__CREDS_SECRET ./$*

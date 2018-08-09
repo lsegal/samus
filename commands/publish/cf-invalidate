@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export AWS_ACCESS_KEY_ID=$__creds_key
-export AWS_SECRET_ACCESS_KEY=$__creds_secret
+export AWS_ACCESS_KEY_ID=$__CREDS_KEY
+export AWS_SECRET_ACCESS_KEY=$__CREDS_SECRET
 
 qty="$#"
 items=`python -c 'import sys, json; print json.dumps(sys.argv[1:])' $*`
@@ -9,6 +9,6 @@ ref=`date`
 
 aws configure set preview.cloudfront true
 aws cloudfront create-invalidation \
-  --region $_region \
-  --distribution-id $_distribution \
+  --region $_REGION \
+  --distribution-id $_DISTRIBUTION \
   --invalidation-batch "{\"Paths\":{\"Quantity\":$qty,\"Items\":$items},\"CallerReference\":\"$ref\"}"

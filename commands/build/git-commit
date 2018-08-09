@@ -7,5 +7,5 @@ message=$($(dirname $0)/support/generate-commit-message.rb)
 
 git add $*
 git commit -m "$message"
-git tag ${_tag-v$_version}
-echo tag ${_tag-v$_version} >> $__restore_file
+git tag ${_TAG-v$_VERSION}
+echo tag ${_TAG-v$_VERSION} >> $__RESTORE_FILE

@@ -14,7 +14,7 @@ module Samus
         actions.map do |action|
           PublishAction.new(
             dry_run: dry_run,
-            arguments: { 'version' => manifest['version'] }
+            arguments: { 'VERSION' => manifest['version'] }
           ).load(action)
         end.each(&:run)
       end

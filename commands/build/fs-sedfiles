@@ -2,6 +2,6 @@
 
 ARGV.map {|f| Dir.glob(f) }.flatten.each do |file|
   contents = File.read(file)
-  contents = contents.gsub(Regexp.new(ENV['_search']), ENV['_replace'])
+  contents = contents.gsub(Regexp.new(ENV['_SEARCH']), ENV['_REPLACE'])
   File.open(file, 'w') {|f| f.write(contents) }
 end

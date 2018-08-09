@@ -67,7 +67,7 @@ module Samus
     end
 
     def run(opts = {})
-      env = (opts[:arguments] || {}).each_with_object({}) { |(k, v), h| h["_#{k}"] = v; }
+      env = (opts[:arguments] || {}).each_with_object({}) { |(k, v), h| h["_#{k.upcase}"] = v; }
       arguments = opts[:files] || []
       dry_run = opts[:dry_run] || false
       allow_fail = opts[:allow_fail] || false
@@ -77,9 +77,9 @@ module Samus
 
       return if dry_run
       exec_in_dir(pwd) do
-        system(env, @full_path + ' ' + (arguments ? arguments.join(' ') : ''))
+        system(env, exe_type + @full_path + ' ' + (arguments ? arguments.join(' ') : ''))
       end
-      report_error($CHILD_STATUS, allow_fail)
+      report_error($?, allow_fail)
     end
 
     def <=>(other)
@@ -96,6 +96,21 @@ module Samus
 
     def exec_in_dir(dir, &block)
       dir ? Dir.chdir(dir, &block) : yield
+    end
+
+    def exe_type
+      return '' unless Samus.windows?
+
+      if File.readlines(@full_path).first.chomp =~ /^#!(.+)/
+        path = $1
+        if path == '/bin/sh'
+          'sh '
+        elsif path == '/usr/bin/env ruby'
+          'ruby '
+        else
+          path + ' '
+        end
+      end
     end
 
     def load_full_path

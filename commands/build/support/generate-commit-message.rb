@@ -5,13 +5,13 @@ def word_wrap(text)
 end
 
 def collect_issues
-  out = `git log $(git describe --tags --abbrev=0)...HEAD -E --grep '#[0-9]+' 2>#{ENV['_devnull']}`
+  out = `git log $(git describe --tags --abbrev=0)...HEAD -E --grep '#[0-9]+' 2>#{ENV['__DEVNULL']}`
   issues = out.scan(/((?:\S+\/\S+)?#\d+)/).flatten
 end
 
-message = ENV["_message"]
+message = ENV["_MESSAGE"]
 if message.nil? || message.strip.empty?
-  message = "Tag release v#{ENV["_version"]}"
+  message = "Tag release v#{ENV["_VERSION"]}"
 
   issues = collect_issues
   if issues.size > 0

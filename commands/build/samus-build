@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-bakfile=${__restore_file}.$$.$RANDOM.bak
-mv $__restore_file $bakfile
-trap "mv $bakfile $__restore_file" 0
-samus build -o $__build_dir/$1 $_build_version ${_manifest}
+bakfile=${__RESTORE_FILE}.$$.$RANDOM.bak
+mv $__RESTORE_FILE $bakfile
+trap "mv $bakfile $__RESTORE_FILE" 0
+samus build -o $__BUILD_DIR/$1 $_BUILD_VERSION ${_MANIFEST}

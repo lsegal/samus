@@ -1,6 +1,8 @@
-# 1.6.4 - August 9th, 2018
+# 2.0.0 - August 9th, 2018
 
-- Add support for Windows portability
+- Add support for Windows. This caused a backwards incompatible change where
+  environment variables are now UPPERCASED by default. In general this should
+  have no effect if you rely only on built-in scripts.
 - Report an error if credentials cannot be parsed.
 
 # 1.6.0 - July 19, 2018

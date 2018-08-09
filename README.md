@@ -221,10 +221,10 @@ as environment variables with a prefixed underscore. For example, the
 ```sh
 #!/bin/sh
 
-rake $_task
+rake $_TASK
 ```
 
-The `$_task` variable is the "task" argument from the manifest.
+The `$_TASK` variable is the "task" argument from the manifest.
 
 Note that commands must be executable (`chmod +x`) and have proper shebang
 lines or they will not function.
@@ -240,18 +240,18 @@ commands directory depending on whether they are for `samus build` or
 In addition to exposing arguments as underscored environment variables,
 Samus also exposes a few special variables with double underscore prefixes:
 
-* `__build_dir` - this variable refers to the temporary directory that the
+- `__build_dir` - this variable refers to the temporary directory that the
   release package is being built inside of. The files inside of this directory,
-  and *only* the files inside of this directory, will be built into the release
+  and _only_ the files inside of this directory, will be built into the release
   archive. If you write a build-time command that produces an output file which
   is part of the release, you should make sure to move it into this directory.
-* `__restore_file` - the restore file is a newline delimited file containing
+- `__restore_file` - the restore file is a newline delimited file containing
   branches and their original ref. All branches listed in this file will be
   restored to the respective ref at the end of `samus build` regardless of
   success status. If you make destructive modifications to existing branches
   in the workspace repository, you should add the original ref for the branch
   to this file.
-* `__creds_*` - provides key, secret, and other values loaded from credentials.
+- `__creds_*` - provides key, secret, and other values loaded from credentials.
   See Credentials section for more information on how these are set.
 
 #### Help Files
@@ -273,9 +273,9 @@ Short description of command.
 
 Notes:
 
-* The first line of the help file is used as the summary in the `show-cmd`
+- The first line of the help file is used as the summary in the `show-cmd`
   listing.
-* Never omit a section. If a command has no files or arguments, use "(none)"
+- Never omit a section. If a command has no files or arguments, use "(none)"
   as the list item text.
 
 ### Credentials
@@ -297,12 +297,12 @@ Key: THE_API_KEY
 Secret: THE_SECRET
 ```
 
-Or, alternatively, an *executable* which prints the above format to standard
+Or, alternatively, an _executable_ which prints the above format to standard
 out.
 
-These values are read in by Samus and get exposed as `$__creds_key` and
-`$__creds_secret` respectively in Samus commands. You can provide other
-metadata as well, which would be included as `$__creds_name` (for the
+These values are read in by Samus and get exposed as `$__CREDS_KEY` and
+`$__CREDS_SECRET` respectively in Samus commands. You can provide other
+metadata as well, which would be included as `$__CREDS_NAME` (for the
 line "NAME: value").
 
 ## Manifest File Format
@@ -337,7 +337,7 @@ Each action item has a single required property, "action", which is the command
 to execute for the action (found in `samus show-cmd`). An optional list of
 files are passed into the command as command line arguments, and the "arguments"
 property is a map of keys to values passed in as environment variables with a
-"\_" prefix (key "foo" is set as environment variable "_foo"). Optional
+"\_" prefix (key "foo" is set as environment variable "\_foo"). Optional
 credentials are loaded from the credentials directory.
 
 ### Build Manifest Format

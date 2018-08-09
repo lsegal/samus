@@ -2,6 +2,6 @@
 
 curl --fail --silent -X POST \
   -H "Content-Type: application/octet-stream" \
-  -H "Authorization: $__creds_secret" \
+  -H "Authorization: $__CREDS_SECRET" \
   --data-binary @$* https://rubygems.org/api/v1/gems
 echo ""

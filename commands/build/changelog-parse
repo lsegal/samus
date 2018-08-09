@@ -16,5 +16,5 @@ def parse_changelog(changelog)
 end
 
 file = ARGV[0]
-dest = File.join(ENV["__build_dir"], ENV["_destination"] || file)
+dest = File.join(ENV["__BUILD_DIR"], ENV["_DESTINATION"] || file)
 File.open(dest, "w") {|f| f.puts(parse_changelog(file)) }

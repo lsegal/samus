@@ -36,12 +36,12 @@ def https_request(opts = {})
   end
 end
 
-key = ENV["__creds_secret"]
-repository = ENV["_repository"]
+key = ENV["__CREDS_SECRET"]
+repository = ENV["_REPOSITORY"]
 tag = ENV["_tag"]
-changelog = ENV["_changelog"]
-title = ENV["_title"] || "Release #{tag}"
-out_file = ENV["_out_file"]
+changelog = ENV["_CHANGELOG"]
+title = ENV["_TITLE"] || "Release #{tag}"
+out_file = ENV["_OUT_FILE"]
 assets = ARGV
 
 fail "Missing `repository`" unless repository

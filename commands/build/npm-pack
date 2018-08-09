@@ -1,4 +1,4 @@
 #!/bin/sh
 
 set -e
-mv `npm pack` $__build_dir/$1
+mv `npm pack` $__BUILD_DIR/$1
