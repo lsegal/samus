@@ -1,5 +1,6 @@
 require 'json'
 require 'tmpdir'
+require 'pathname'
 
 require_relative './build_action'
 
@@ -35,6 +36,8 @@ module Samus
       remove_restore_file
 
       Dir.mktmpdir do |build_dir|
+        pwdpath = Pathname.new(Dir.pwd)
+        build_dir = Pathname.new(build_dir).relative_path_from(pwdpath).to_s
         actions.map do |action|
           BuildAction.new(dry_run: dry_run, arguments: {
                             '_RESTORE_FILE' => RESTORE_FILE,
