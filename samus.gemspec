@@ -9,5 +9,5 @@ Gem::Specification.new do |s|
   s.homepage      = 'http://github.com/lsegal/samus'
   s.files         = `git ls-files`.split(/\s+/)
   s.executables   = ['samus']
-  s.license       = 'BSD'
+  s.license       = 'MIT'
 end
