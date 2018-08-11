@@ -1,3 +1,7 @@
+# 2.0.2 - August 11th, 2018
+
+- Some more fixes for Windows compatibility when using `archive-git-full`.
+
 # 2.0.0 - August 9th, 2018
 
 - Add support for Windows. This caused a backwards incompatible change where
