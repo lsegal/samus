@@ -168,7 +168,7 @@ Remember to replace `<VERSION>` with your version string (i.e. `1.0.0`). Then
 to publish, use:
 
 ```sh
-docker run --rm -v $HOME:/root -w /root/${PWD#$HOME} -it lsegal/samus \
+docker run --rm -v $HOME:/root:ro -w /root/${PWD#$HOME} -it lsegal/samus \
   samus publish release-v<VERSION>.tar.gz
 ```
 
