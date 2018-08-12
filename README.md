@@ -21,6 +21,8 @@ Samus is a RubyGem and requires Ruby 1.9.x+. Installing is as easy as typing:
 $ gem install samus
 ```
 
+If you would rather use Samus via Docker, see the Docker section in Usage below.
+
 ## Usage
 
 Samus is driven by a manifest file that describes the steps to perform when
@@ -150,6 +152,38 @@ your release as a directory instead of a zip with `--no-zip`.
 
 Note: If you didn't name your manifest samus.json you can simply enter the
 filename in the build command as `samus build VERSION manifest.json`.
+
+### Docker Support
+
+If you would prefer to run Samus on a pre-built image with prepared
+dependencies, you can use the
+[lsegal/samus](https://hub.docker.com/r/lsegal/samus/) Docker image as follows:
+
+```sh
+docker run --rm -v $HOME:/root -w /root/${PWD#$HOME} -it lsegal/samus \
+  samus build <VERSION>
+```
+
+Remember to replace `<VERSION>` with your version string (i.e. `1.0.0`). Then
+to publish, use:
+
+```sh
+docker run --rm -v $HOME:/root -w /root/${PWD#$HOME} -it lsegal/samus \
+  samus publish release-v<VERSION>.tar.gz
+```
+
+#### Docker Isolation Notes
+
+Note that these instructions are _not_ meant to run an isolated release
+environment, but instead as a convenience to provide all of the non-Ruby
+dependencies that Samus might need. If you wish to build and deploy from an
+isolated environment, you would have to build a Dockerfile `FROM lsegal/samus`
+and ensure that all necessary credentials and configuration is copied in. This
+is an exercise left up to the user, since it can be complex and depends on the
+amount of configuration needed for building (Git configuration, SSH keys, etc).
+
+Also note that this syntax is currently only supported for POSIX style systems
+and does not yet support Windows.
 
 ## Built-in Commands
 
