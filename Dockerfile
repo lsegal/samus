@@ -10,3 +10,5 @@ RUN chmod 400 ~/.ssh/config
 
 COPY . /samus
 ENV PATH=$PATH:/samus/bin
+
+WORKDIR /build
