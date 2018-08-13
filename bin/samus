@@ -45,8 +45,9 @@ dry_run = false
 zip_release = true
 outfile = nil
 docker = false
+docker_image = "lsegal/samus:latest"
 options = OptionParser.new do |opts|
-  opts.banner  = "Usage: samus publish [options] <directory> [directory ...]\n"
+  opts.banner  = "Usage: samus publish [options] <release_file> [release_file ...]\n"
   opts.banner += "       samus build [options] <version> [build.json]\n"
   opts.banner += "       samus show-cmd [stage] [name]\n"
 
@@ -56,19 +57,34 @@ options = OptionParser.new do |opts|
     dry_run = true
   end
   if command == Samus::Builder
-    opts.on('--[no-]zip', 'Zip release directory') do |zip|
+    opts.on('--[no-]zip', 'Zip release file') do |zip|
       zip_release = zip
     end
     opts.on('-o FILE', '--output', 'The file (no extension) to generate') do |file|
       outfile = file
     end
-  else
-    opts.on('--docker', 'Use docker to publish') do |_v|
-      docker = true
-    end
+  end
+  opts.on('--docker', 'Use Docker to build or publish') do |_v|
+    docker = true
+  end
+  opts.on('--docker-image IMAGE', 'Which Docker image to use (default: lsegal/samus:latest)') do |img|
+    docker_image = img
   end
 end
 options.parse!
+
+if docker
+  cmd = <<-COMMAND
+    docker run --rm -v "#{Dir.home}:/root"
+    -v "#{Dir.pwd}:/build" -w /build -it #{docker_image}
+    sh -c "chmod 400 /root/.ssh/*" &&
+    samus #{command == Samus::Builder ? 'build' : 'publish'} #{ARGV.join(' ')}
+  COMMAND
+  cmd = cmd.gsub(/ +/, ' ').delete("\n").strip
+  puts "[C] #{cmd}"
+  system(cmd)
+  exit($?.to_i)
+end
 
 if command == Samus::Publisher
   ARGV.each do |dir|
@@ -76,16 +92,6 @@ if command == Samus::Publisher
   end
 
   ARGV.each do |dir|
-    if docker
-      cmd = <<-COMMAND
-        docker run --rm -v "#{Dir.home}/.samus:/root/.samus"
-        -v "#{Dir.pwd}:/app" -w /app -t lsegal/samus
-        samus publish "#{dir}"
-      COMMAND
-      system(cmd.delete("\n").chomp)
-      next
-    end
-
     if File.directory?(dir)
       command.new(dir).publish(dry_run)
     elsif File.file?(dir) # it has to be an archive
@@ -104,6 +110,6 @@ elsif command == Samus::Builder
     command.new(file).build(dry_run, zip_release, outfile)
   end
 else
-  puts opts
+  puts options
   exit 1
 end

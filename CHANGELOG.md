@@ -1,3 +1,11 @@
+# 2.0.3 - August 12th, 2018
+
+- Add `--docker` support to build and publish which runs Samus inside a pre-built
+  container with all default dependencies. You can provide
+  `--docker-image image-name` to use a different image from the default
+  `lsegal/samus` container.
+- Fix `changelog-parse` command.
+
 # 2.0.2 - August 11th, 2018
 
 - Some more fixes for Windows compatibility when using `archive-git-full`.

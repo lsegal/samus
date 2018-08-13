@@ -3,7 +3,7 @@
 def parse_changelog(changelog)
   out, collect_started = [], false
   File.read(changelog).split(/\r?\n/).each do |line|
-    if line =~ /^(#+\s+)?\S/
+    if line =~ /^(#+\s+)\S/
       break if collect_started
       collect_started = true
       next
