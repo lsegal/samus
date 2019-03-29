@@ -1,20 +1,16 @@
 #!/usr/bin/env ruby
 
 def parse_changelog(changelog)
-  out, collect_started = [], false
-  File.read(changelog).split(/\r?\n/).each do |line|
-    if line =~ /^(#+\s+)\S/
-      break if collect_started
-      collect_started = true
-      next
-    end
-
-    next if line =~ /^(\S)\1*$/
-    out << line if collect_started
-  end
-  out.join("\n").strip
+  log = File.read(changelog)
+  match = /^#\s*\[#{ENV["_BUILD_VERSION"]}\]\s+-\s+(?<title>.+?)\r?\n(?<body>.*?)\r?\n#/ms.match(log)
+  match ? match["body"] : nil
 end
 
 file = ARGV[0]
 dest = File.join(ENV["__BUILD_DIR"], ENV["_DESTINATION"] || file)
-File.open(dest, "w") {|f| f.puts(parse_changelog(file)) }
+out = parse_changelog(file)
+if out
+  puts "Changelog:"
+  puts out
+  File.open(dest, "w") {|f| f.puts(out) }
+end

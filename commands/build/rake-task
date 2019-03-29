@@ -1,3 +1,7 @@
 #!/bin/sh
 
-ruby -S rake $_TASK
+if [ -f Gemfile ]; then
+  ruby -S bundle exec rake $_TASK
+else
+  ruby -S rake $_TASK
+fi
