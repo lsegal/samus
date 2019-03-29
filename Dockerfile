@@ -1,6 +1,6 @@
 FROM python:3.7-alpine
 
-RUN apk add openssh ruby ruby-json nodejs git curl
+RUN apk add -U --no-cache openssh ruby ruby-json nodejs git curl
 RUN pip install awscli
 RUN gem install rake --no-rdoc --no-ri
 RUN mkdir -p ~/.ssh
@@ -12,3 +12,4 @@ COPY . /samus
 ENV PATH=$PATH:/samus/bin
 
 WORKDIR /build
+ENTRYPOINT [ "/samus/entrypoint.sh" ]
