@@ -1,3 +1,12 @@
+# 3.0.0 - March 30th, 2019
+
+- Add `build/ruby-bundle` command to run Bundler commands like install.
+- Update `build/rake-task` to `bundle exec` when a Gemfile is present.
+- Update `lsegal/samus` Docker image to contain Bundler 1.17.2.
+- Update `build/changelog-parse` to support different formatting.
+- Update `build/git-merge` to no longer pull from remote since credentials
+  are not supported at build time.
+
 # 2.0.3 - August 12th, 2018
 
 - Add `--docker` support to build and publish which runs Samus inside a pre-built

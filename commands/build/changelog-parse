@@ -2,7 +2,7 @@
 
 def parse_changelog(changelog)
   log = File.read(changelog)
-  match = /^#\s*\[?#{ENV["_BUILD_VERSION"]}\]?\s+-\s+(?<title>.+?)\r?\n(?<body>.*?)\r?\n#/ms.match(log)
+  match = /^#\s*\[?#{ENV["_VERSION"]}\]?\s+-\s+(?<title>.+?)\r?\n(?<body>.*?)\r?\n#/ms.match(log)
   match ? match["body"] : nil
 end
 
