@@ -38,7 +38,7 @@ end
 
 key = ENV["__CREDS_SECRET"]
 repository = ENV["_REPOSITORY"]
-tag = ENV["_tag"]
+tag = ENV["_TAG"]
 changelog = ENV["_CHANGELOG"]
 title = ENV["_TITLE"] || "Release #{tag}"
 out_file = ENV["_OUT_FILE"]
