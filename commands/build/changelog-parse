@@ -2,7 +2,7 @@
 
 def parse_changelog(changelog)
   log = File.read(changelog)
-  match = /^#\s*\[#{ENV["_BUILD_VERSION"]}\]\s+-\s+(?<title>.+?)\r?\n(?<body>.*?)\r?\n#/ms.match(log)
+  match = /^#\s*\[?#{ENV["_BUILD_VERSION"]}\]?\s+-\s+(?<title>.+?)\r?\n(?<body>.*?)\r?\n#/ms.match(log)
   match ? match["body"] : nil
 end
 
@@ -13,4 +13,7 @@ if out
   puts "Changelog:"
   puts out
   File.open(dest, "w") {|f| f.puts(out) }
+else
+  puts "Failed to find changelog data"
+  exit 1
 end
