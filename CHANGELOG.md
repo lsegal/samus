@@ -1,3 +1,7 @@
+# 3.0.1 - March 30th, 2019
+
+- Fix bug in `publish/github-release` command due to invalid tag handling.
+
 # 3.0.0 - March 30th, 2019
 
 - Add `build/ruby-bundle` command to run Bundler commands like install.
