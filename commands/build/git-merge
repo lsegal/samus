@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -e
-git fetch ${_REMOTE-origin}
 git checkout -q $_BRANCH
 echo branch $_BRANCH $(git rev-parse HEAD) >> $__RESTORE_FILE
 git rebase ${_REMOTE-origin}/$_BRANCH
