@@ -1,5 +1,0 @@
-FROM lsegal/samus:build
-ARG VERSION
-ENV VERSION=${VERSION}
-COPY . /build
-RUN samus build ${VERSION}
