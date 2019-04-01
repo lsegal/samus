@@ -1,3 +1,8 @@
+# 3.0.5 - April 1st, 2019
+
+- Fix bug that breaks DockerReleaseTask if .gitconfig or .samus configs are
+  not present on the system.
+
 # 3.0.4 - April 1st, 2019
 
 - Automatically build Dockerfile.samus as tempfile if it is not present in

@@ -49,15 +49,19 @@ module Samus
 
         yield self if block_given?
 
-        @config_files = {
-          Samus::CONFIG_PATH => '.samus',
-          File.expand_path('~/.gitconfig') => '.gitconfig'
-        }.merge(extra_config)
-
+        build_config_files
         define
       end
 
       private
+
+      def build_config_files
+        @config_files = {
+          Samus::CONFIG_PATH => '.samus',
+          File.expand_path('~/.gitconfig') => '.gitconfig'
+        }.merge(extra_config)
+        @config_files.reject! {|src, _dst| !File.exist?(src) }
+      end
 
       def copy_prep
         FileUtils.rm_rf(PREP_DIR)
