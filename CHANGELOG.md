@@ -1,3 +1,13 @@
+# 3.0.4 - April 1st, 2019
+
+- Automatically build Dockerfile.samus as tempfile if it is not present in
+  the repo when using `Samus::Rake::DockerReleaseTask`. This docker image
+  copies all credentials in so it can be run directly without mounts.
+- Add `mount_samus_config` option (defaults to `false`) to `DockerReleaseTask`
+  options to allow Docker image to mount the Samus configuration directory
+  from the host when publishing the image. To override the config directory,
+  specify the `SAMUS_CONFIG_PATH` environment variable to the `publish` task.
+
 # 3.0.3 - April 1st, 2019
 
 - Add `Samus::Rake::ReleaseTask` and `Samus::Rake::DockerReleaseTask` to

@@ -3,8 +3,6 @@ require 'rake/tasklib'
 require 'tempfile'
 require 'fileutils'
 
-require_relative '../../samus'
-
 module Samus
   module Rake
     module Helpers
@@ -36,12 +34,15 @@ module Samus
 
       attr_accessor :git_pull_after_publish
 
+      attr_accessor :mount_samus_config
+
       def initialize(namespace = :samus)
         @namespace = namespace
         @dockerfile = DEFAULT_DOCKERFILE
         @delete_image_after_publish = true
         @git_pull_before_build = true
         @git_pull_after_publish = true
+        @mount_samus_config = false
         yield self if block_given?
         define
       end
@@ -63,7 +64,7 @@ module Samus
           "ARG VERSION",
           "ENV VERSION=${VERSION}",
           "COPY . /build",
-          "RUN mv /build/#{PREP_DIR}/{*,.*} /root/ && rmdir /build/#{PREP_DIR}"
+          "RUN mv /build/#{PREP_DIR}/{*,.*} /root/ && rmdir /build/#{PREP_DIR}",
           "RUN samus build ${VERSION}"
         ].join("\n"))
         tempfile.close
@@ -92,7 +93,8 @@ module Samus
           desc '[VERSION=X.Y.Z] Publishes a built release using Docker'
           task :publish do
             img = release_image
-            sh "docker run --rm #{img}"
+            mount = mount_samus_config ? "-v #{Samus::CONFIG_PATH}:/root/.samus:ro" : ''
+            sh "docker run #{mount} --rm #{img}"
             sh "docker rmi -f #{img}" if delete_image_after_publish
             sh "git pull" if git_pull_after_publish
           end
