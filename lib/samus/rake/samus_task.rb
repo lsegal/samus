@@ -56,19 +56,20 @@ module Samus
         FileUtils.cp_r(File.expand_path('~/.gitconfig'), "#{PREP_DIR}/.gitconfig")
       end
 
-      def build_temp_dockerfile
-        return nil if File.exist?(dockerfile)
-        tempfile = Tempfile.new(DEFAULT_DOCKERFILE + '.' + File.basename(Dir.pwd))
-        tempfile.write([
-          "FROM lsegal/samus:build",
-          "ARG VERSION",
-          "ENV VERSION=${VERSION}",
-          "COPY . /build",
-          "RUN mv /build/#{PREP_DIR}/{*,.*} /root/ && rmdir /build/#{PREP_DIR}",
-          "RUN samus build ${VERSION}"
-        ].join("\n"))
-        tempfile.close
-        tempfile
+      def build_or_get_dockerfile
+        return dockerfile if File.exist?(dockerfile)
+        fname = File.join(PREP_DIR, 'Dockerfile')
+        File.open(fname, 'w') do |f|
+          f.puts([
+            "FROM lsegal/samus:build",
+            "ARG VERSION",
+            "ENV VERSION=${VERSION}",
+            "COPY . /build",
+            "RUN rm -f /build/#{PREP_DIR}/Dockerfile && mv /build/#{PREP_DIR}/{*,.*} /root/ && rmdir /build/#{PREP_DIR}",
+            "RUN samus build ${VERSION}"
+          ].join("\n"))
+        end
+        fname
       end
       
       def define
@@ -80,13 +81,10 @@ module Samus
             sh "git pull" if git_pull_before_build
 
             begin
-              temp_dockerfile = build_temp_dockerfile
-              real_dockerfile = temp_dockerfile ? temp_dockerfile.path : dockerfile
               copy_prep
-              sh "docker build . -t #{img} -f #{real_dockerfile} --build-arg VERSION=#{ver}"
+              sh "docker build . -t #{img} -f #{build_or_get_dockerfile} --build-arg VERSION=#{ver}"
             ensure
               FileUtils.rm_rf(PREP_DIR)
-              temp_dockerfile.unlink if temp_dockerfile
             end
           end
 
