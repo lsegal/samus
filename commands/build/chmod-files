@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+dir_mask = ENV['_DIR_MASK'] || "775"
+entries = {}
+
+ARGV.each do |arg|
+  wildcard, want_fmode = *arg.split(',')
+  Dir.glob(wildcard).each do |entry|
+    stat = File.stat(entry)
+    real_mode = stat.mode.to_s(8)[-3..-1]
+    want_mode = stat.directory? ? dir_mask : want_fmode
+
+    if real_mode != want_mode
+      entries[entry] = { want: want_mode, real: real_mode }
+    else
+      entries.delete(entry)
+    end
+  end
+end
+
+entries.each do |f, mode|
+  File.chmod(mode[:want].to_i(8), f)
+  puts "Fix permissions: #{mode[:real]} -> #{mode[:want]} for #{f}"
+end
