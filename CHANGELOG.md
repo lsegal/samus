@@ -7,6 +7,9 @@
   options to allow Docker image to mount the Samus configuration directory
   from the host when publishing the image. To override the config directory,
   specify the `SAMUS_CONFIG_PATH` environment variable to the `publish` task.
+- Add `extra_config` to `DockerReleaseTask` to allow extra files to be
+  copied into the `/root` directory of the build image. The value should be
+  a hash of src -> dest filenames to copy.
 
 # 3.0.3 - April 1st, 2019
 

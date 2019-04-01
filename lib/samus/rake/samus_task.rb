@@ -36,6 +36,8 @@ module Samus
 
       attr_accessor :mount_samus_config
 
+      attr_accessor :extra_config
+
       def initialize(namespace = :samus)
         @namespace = namespace
         @dockerfile = DEFAULT_DOCKERFILE
@@ -43,23 +45,24 @@ module Samus
         @git_pull_before_build = true
         @git_pull_after_publish = true
         @mount_samus_config = false
+        @extra_config = {}
+
         yield self if block_given?
+
+        @config_files = {
+          Samus::CONFIG_PATH => '.samus',
+          File.expand_path('~/.gitconfig') => '.gitconfig'
+        }.merge(extra_config)
+
         define
       end
 
       private
 
-      def prepfiles
-        {
-          Samus::CONFIG_PATH => '.samus',
-          File.expand_path('~/.gitconfig') => '.gitconfig'
-        }
-      end
-
       def copy_prep
         FileUtils.rm_rf(PREP_DIR)
         FileUtils.mkdir_p(PREP_DIR)
-        prepfiles.each do |src, dst|
+        @config_files.each do |src, dst|
           FileUtils.cp_r(src, File.join(PREP_DIR, dst))
         end
       end
@@ -67,14 +70,14 @@ module Samus
       def build_or_get_dockerfile
         return dockerfile if File.exist?(dockerfile)
         fname = File.join(PREP_DIR, 'Dockerfile')
-        prepcopies = prepfiles.values.map {|f| "COPY ./#{PREP_DIR}/#{f} /root/#{f}" }
+        config_copies = @config_files.values.map {|f| "COPY ./#{PREP_DIR}/#{f} /root/#{f}" }
         File.open(fname, 'w') do |f|
           f.puts([
             "FROM lsegal/samus:build",
             "ARG VERSION",
             "ENV VERSION=${VERSION}",
             "COPY . /build",
-            prepcopies.join("\n"),
+            config_copies.join("\n"),
             "RUN rm -rf /build/.samusprep",
             "RUN samus build ${VERSION}"
           ].join("\n"))
