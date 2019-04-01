@@ -9,6 +9,15 @@
       }
     },
     {
+      "action": "chmod-files",
+      "files": [
+        "**/*,644",
+        "bin/*,755",
+        "commands/**/*,755",
+        "commands/**/*.md,644"
+      ]
+    },
+    {
       "action": "git-commit",
       "files": ["lib/*/version.rb"]
     },
