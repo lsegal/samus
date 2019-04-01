@@ -1,3 +1,7 @@
+# 3.0.2 - April 1st, 2019
+
+- Add `chmod-files` command to fix file permissions on globs.
+
 # 3.0.1 - March 30th, 2019
 
 - Fix bug in `publish/github-release` command due to invalid tag handling.
