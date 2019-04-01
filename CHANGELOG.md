@@ -1,3 +1,20 @@
+# 3.0.3 - April 1st, 2019
+
+- Add `Samus::Rake::ReleaseTask` and `Samus::Rake::DockerReleaseTask` to
+  generate helpful Rake tasks to generate releases. Example:
+
+```ruby
+require 'samus'
+
+Samus::Rake::ReleaseTask.new do |t|
+  t.git_pull_after_release = true # default is true
+  t.zipfile = "customzip.tar.gz"  # default release-vX.Y.Z.tar.gz
+  t.buildfile = "samus.json"      # default is samus.json
+end
+```
+
+- Add `lsegal/samus:build` Dockerfile to simplify creation of build docker images.
+
 # 3.0.2 - April 1st, 2019
 
 - Add `chmod-files` command to fix file permissions on globs.
@@ -62,3 +79,7 @@
 # 1.3.0 - July 23, 2014
 
 - Fix issue where repository would not reset when using `samus-build` command.
+
+```
+
+```

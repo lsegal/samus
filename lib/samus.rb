@@ -4,6 +4,12 @@ require_relative './samus/builder'
 module Samus
   CONFIG_PATH = File.expand_path(ENV['SAMUS_CONFIG_PATH'] || '~/.samus')
 
+  module Rake
+    # Autoloads
+    autoload :ReleaseTask, File.expand_path('samus/rake/samus_task', __dir__)
+    autoload :DockerReleaseTask, File.expand_path('samus/rake/samus_task', __dir__)
+  end
+
   module_function
 
   def config_paths; @@config_paths end

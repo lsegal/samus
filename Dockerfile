@@ -9,6 +9,9 @@ RUN echo "Host *" > ~/.ssh/config
 RUN echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 RUN chmod 400 ~/.ssh/config
 
+RUN git config --global user.email "bot@not.human"
+RUN git config --global user.name "Samus Release Bot"
+
 COPY . /samus
 ENV PATH=$PATH:/samus/bin
 

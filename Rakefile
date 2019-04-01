@@ -1,17 +1,14 @@
-task default: :build
+require_relative './lib/samus'
 
-def docker_cmd
-  "docker run --rm -v #{Dir.home}:/root:ro -v #{Dir.pwd}:/build lsegal/samus"
+task default: 'samus:build'
+
+Samus::Rake::DockerReleaseTask.new
+
+task :images do
+  sh "docker build -t lsegal/samus:latest -f Dockerfile ."
+  sh "docker build -t lsegal/samus:build -f Dockerfile.build ."
 end
 
-task :image do
-  sh "docker build -t lsegal/samus ."
-end
-
-task build: :image do
-  sh "#{docker_cmd} build #{ENV['VERSION']}"
-end
-
-task :publish do
-  sh "#{docker_cmd} publish release-v#{ENV['VERSION']}.tar.gz"
+namespace :samus do
+  task build: :images
 end
