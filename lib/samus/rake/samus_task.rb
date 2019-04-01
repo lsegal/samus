@@ -29,12 +29,15 @@ module Samus
 
       attr_accessor :delete_image_after_publish
 
+      attr_accessor :git_pull_before_build
+
       attr_accessor :git_pull_after_publish
 
       def initialize(namespace = :samus)
         @namespace = namespace
         @dockerfile = DEFAULT_DOCKERFILE
         @delete_image_after_publish = true
+        @git_pull_before_build = true
         @git_pull_after_publish = true
         yield self if block_given?
         define
@@ -48,6 +51,7 @@ module Samus
           task :build do
             img = release_image
             ver = release_version
+            sh "git pull" if git_pull_before_build
             sh "docker build . -t #{img} -f #{dockerfile} --build-arg VERSION=#{ver}"
           end
 
@@ -66,6 +70,7 @@ module Samus
     class ReleaseTask < ::Rake::TaskLib
       include Helpers
 
+      attr_accessor :git_pull_before_build
       attr_accessor :git_pull_after_publish
       attr_accessor :buildfile
       attr_writer :zipfile
@@ -74,6 +79,7 @@ module Samus
         @namespace = namespace
         @buildfile = ""
         @zipfile = nil
+        @git_pull_before_build = true
         @git_pull_after_publish = true
         yield self if block_given?
         define
@@ -89,6 +95,7 @@ module Samus
         namespace(@namespace) do
           desc '[VERSION=X.Y.Z] Builds a Samus release'
           task :build do
+            sh "git pull" if git_pull_before_build
             sh "samus build -o #{zipfile} #{release_version} #{buildfile}"
           end
 
