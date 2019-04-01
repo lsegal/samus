@@ -49,24 +49,32 @@ module Samus
 
       private
 
+      def prepfiles
+        {
+          Samus::CONFIG_PATH => '.samus',
+          File.expand_path('~/.gitconfig') => '.gitconfig'
+        }
+      end
+
       def copy_prep
         FileUtils.rm_rf(PREP_DIR)
         FileUtils.mkdir_p(PREP_DIR)
-        FileUtils.cp_r(Samus::CONFIG_PATH, "#{PREP_DIR}/.samus")
-        FileUtils.cp_r(File.expand_path('~/.gitconfig'), "#{PREP_DIR}/.gitconfig")
+        prepfiles.each do |src, dst|
+          FileUtils.cp_r(src, File.join(PREP_DIR, dst))
+        end
       end
 
       def build_or_get_dockerfile
         return dockerfile if File.exist?(dockerfile)
         fname = File.join(PREP_DIR, 'Dockerfile')
+        prepcopies = prepfiles.values.map {|f| "COPY ./#{PREP_DIR}/#{f} /root/#{f}" }
         File.open(fname, 'w') do |f|
           f.puts([
             "FROM lsegal/samus:build",
             "ARG VERSION",
             "ENV VERSION=${VERSION}",
             "COPY . /build",
-            File.exist?(File.join(PREP_DIR, '.samus')) ? "COPY ./#{PREP_DIR}/.samus /root/.samus" : "",
-            File.exist?(File.join(PREP_DIR, '.gitconfig')) ? "COPY ./#{PREP_DIR}/.gitconfig /root/.gitconfig" : "",
+            prepcopies.join("\n"),
             "RUN rm -rf /build/.samusprep",
             "RUN samus build ${VERSION}"
           ].join("\n"))
