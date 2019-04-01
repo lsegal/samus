@@ -65,7 +65,9 @@ module Samus
             "ARG VERSION",
             "ENV VERSION=${VERSION}",
             "COPY . /build",
-            "RUN rm -f /build/#{PREP_DIR}/Dockerfile && mv /build/#{PREP_DIR}/{*,.*} /root/ && rmdir /build/#{PREP_DIR}",
+            File.exist?(File.join(PREP_DIR, '.samus')) ? "COPY ./#{PREP_DIR}/.samus /root/.samus" : "",
+            File.exist?(File.join(PREP_DIR, '.gitconfig')) ? "COPY ./#{PREP_DIR}/.gitconfig /root/.gitconfig" : "",
+            "RUN rm -rf /build/.samusprep",
             "RUN samus build ${VERSION}"
           ].join("\n"))
         end
