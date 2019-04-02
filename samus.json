@@ -9,6 +9,13 @@
       }
     },
     {
+      "action": "changelog-rotate",
+      "files": "CHANGELOG.md",
+      "arguments": {
+        "title_format": "$version - %B %d$day_nth, %Y"
+      }
+    },
+    {
       "action": "chmod-files",
       "files": [
         "**/*,644",
@@ -19,7 +26,7 @@
     },
     {
       "action": "git-commit",
-      "files": ["lib/*/version.rb"]
+      "files": ["CHANGELOG.md", "lib/*/version.rb"]
     },
     {
       "action": "git-merge",
