@@ -1,5 +1,9 @@
 # master
 
+# 3.0.7 - April 02nd, 2019
+
+[3.0.7]: https://github.com/lsegal/samus/compare/v3.0.6...v3.0.7
+
 - Fix bug in `publish` task of DockerReleaseTask in previous release.
 
 # 3.0.6 - April 02nd, 2019
