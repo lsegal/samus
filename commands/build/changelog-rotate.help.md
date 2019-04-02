@@ -14,3 +14,5 @@ Arguments:
   also include `$version` to represent the title of the rotated changelog entry.
   Example: `$version - %B %-d, %Y`. It is recommended to put the version at the
   front of the title to improve the reliability of generating a compare URL.
+- tz: (optional) set the timezone if not available on the build system. Defaults
+  to system timezone.

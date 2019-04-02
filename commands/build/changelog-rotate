@@ -4,6 +4,7 @@ file = ARGV[0]
 ver = ENV['_VERSION']
 master = ENV['_MASTER'] || 'master'
 title_fmt = ENV['_TITLE_FORMAT'] || "[$version] - %B %-d$day_nth, %Y"
+ENV['TZ'] ||= ENV['_TZ']
 
 content = File.read(file)
 compare_url = `git config remote.origin.url`.strip.sub(/^git@(.+?):/, 'https://\1/')
