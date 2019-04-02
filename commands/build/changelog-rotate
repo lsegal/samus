@@ -3,7 +3,7 @@
 file = ARGV[0]
 ver = ENV['_VERSION']
 master = ENV['_MASTER'] || 'master'
-title_fmt = ENV['_TITLE_FORMAT'] || "[$version] - %B %d$day_nth, %Y"
+title_fmt = ENV['_TITLE_FORMAT'] || "[$version] - %B %-d$day_nth, %Y"
 
 content = File.read(file)
 compare_url = `git config remote.origin.url`.strip.sub(/^git@(.+?):/, 'https://\1/')
@@ -15,8 +15,8 @@ raise "Failed to rotate changelog: #{file}" unless match
 
 prev_ver = match['rest'][/(\d+\.\d+(?:\.\d+)?)/, 1]
 repl = "# #{master}\n\n# #{title}\n\n" +
-  (prev_ver ? "[#{ver}]: #{compare_url}/compare/v#{prev_ver}...v#{ver}\n\n" : '') +
-  match['body'] + "\n\n" +
-  match['rest']
+  (prev_ver ? "[#{ver}]: #{compare_url}/compare/v#{prev_ver}...v#{ver}\n" : '') +
+  match['body'] + match['rest']
 File.open(file, 'w') {|f| f.write(repl) }
-puts "Added new #{file} header: #{title} (previous version: #{prev_ver.inspect})"
+puts "Added new #{file} header: #{title}"
+puts "Previous #{file} version: #{prev_ver.inspect}"

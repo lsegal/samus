@@ -12,5 +12,5 @@ Arguments:
   heading used for in-flux changelog entries before rotation.
 - title_format: (optional) a `Time.strftime` date formatted string that can
   also include `$version` to represent the title of the rotated changelog entry.
-  Example: `$version - %B %d, %Y`. It is recommended to put the version at the
+  Example: `$version - %B %-d, %Y`. It is recommended to put the version at the
   front of the title to improve the reliability of generating a compare URL.
