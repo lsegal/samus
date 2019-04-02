@@ -1,5 +1,9 @@
 # master
 
+# 3.0.8 - April 1st, 2019
+
+[3.0.8]: https://github.com/lsegal/samus/compare/v3.0.7...v3.0.8
+
 - Fix timezone handling issue.
 
 # 3.0.7 - April 1st, 2019
