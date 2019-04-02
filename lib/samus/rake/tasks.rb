@@ -110,7 +110,7 @@ module Samus
             img = release_image
             mount = mount_samus_config ? "-v #{Samus::CONFIG_PATH}:/root/.samus:ro" : ''
             sh "docker run #{mount} --rm #{release_image}"
-            Rake::Task["#{@namespace}:clean"].execute if delete_image_after_publish
+            ::Rake::Task["#{@namespace}:clean"].execute if delete_image_after_publish
             sh "git pull" if git_pull_after_publish
           end
 
