@@ -103,7 +103,3 @@ end
 # 1.3.0 - July 23, 2014
 
 - Fix issue where repository would not reset when using `samus-build` command.
-
-```
-
-```
