@@ -3,6 +3,8 @@
 - Add `--skip-restore` to samus build to skip restoring Git repository. Useful
   with Docker build support in order to inspect output of a built release.
 - Add `build/changelog-rotate` command for changelog rotation.
+- Add `inspect` and `clean` Rake tasks for `DockerReleaseTask` to inspect and
+  remove a previously built release respectively.
 
 # 3.0.5 - April 1st, 2019
 

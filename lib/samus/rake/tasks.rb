@@ -60,7 +60,7 @@ module Samus
           Samus::CONFIG_PATH => '.samus',
           File.expand_path('~/.gitconfig') => '.gitconfig'
         }.merge(extra_config)
-        @config_files.reject! {|src, _dst| !File.exist?(src) }
+        @config_files.select! {|src, _dst| File.exist?(src) }
       end
 
       def copy_prep
@@ -99,7 +99,7 @@ module Samus
 
             begin
               copy_prep
-              sh "docker build . -t #{img} -f #{build_or_get_dockerfile} --build-arg VERSION=#{ver}"
+              sh "docker build . --rm -t #{img} -f #{build_or_get_dockerfile} --build-arg VERSION=#{ver}"
             ensure
               FileUtils.rm_rf(PREP_DIR)
             end
@@ -109,9 +109,19 @@ module Samus
           task :publish do
             img = release_image
             mount = mount_samus_config ? "-v #{Samus::CONFIG_PATH}:/root/.samus:ro" : ''
-            sh "docker run #{mount} --rm #{img}"
-            sh "docker rmi -f #{img}" if delete_image_after_publish
+            sh "docker run #{mount} --rm #{release_image}"
+            Rake::Task["#{@namespace}:clean"].execute if delete_image_after_publish
             sh "git pull" if git_pull_after_publish
+          end
+
+          desc '[VERSION=X.Y.Z] Inspects a built release using Docker shell'
+          task :inspect do
+            sh "docker run -it --entrypoint sh #{release_image}"
+          end
+
+          desc '[VERSION=X.Y.Z] Removes a built release using Docker'
+          task :clean do
+            sh "docker rmi -f #{release_image}"
           end
         end
       end
