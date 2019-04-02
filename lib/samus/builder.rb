@@ -60,10 +60,13 @@ module Samus
         end
       end
     ensure
-      return if skip_restore
-      restore_git_repo
-      system "git checkout -q #{orig_branch} 2>#{devnull}"
-      system "git branch -qD #{build_branch} 2>#{devnull}"
+      if skip_restore
+        remove_restore_file
+      else
+        restore_git_repo
+        system "git checkout -q #{orig_branch} 2>#{devnull}"
+        system "git branch -qD #{build_branch} 2>#{devnull}"
+      end
     end
 
     private
