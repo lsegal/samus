@@ -1,3 +1,9 @@
+# master
+
+- Add `--skip-restore` to samus build to skip restoring Git repository. Useful
+  with Docker build support in order to inspect output of a built release.
+- Add `build/changelog-rotate` command for changelog rotation.
+
 # 3.0.5 - April 1st, 2019
 
 - Fix bug that breaks DockerReleaseTask if .gitconfig or .samus configs are
