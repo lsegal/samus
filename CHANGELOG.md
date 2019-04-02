@@ -1,5 +1,9 @@
 # master
 
+# 3.0.6 - April 02nd, 2019
+
+[3.0.6]: https://github.com/lsegal/samus/compare/v3.0.5...v3.0.6
+
 - Add `--skip-restore` to samus build to skip restoring Git repository. Useful
   with Docker build support in order to inspect output of a built release.
 - Add `build/changelog-rotate` command for changelog rotation.
