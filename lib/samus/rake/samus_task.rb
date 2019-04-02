@@ -140,7 +140,7 @@ module Samus
       def zipfile
         @zipfile || "release-v#{release_version}.tar.gz"
       end
-      
+
       def define
         namespace(@namespace) do
           desc '[VERSION=X.Y.Z] Builds a Samus release'
