@@ -43,6 +43,7 @@ command =
 
 dry_run = false
 zip_release = true
+skip_restore = false
 outfile = nil
 docker = false
 docker_image = "lsegal/samus:latest"
@@ -62,6 +63,9 @@ options = OptionParser.new do |opts|
     end
     opts.on('-o FILE', '--output', 'The file (no extension) to generate') do |file|
       outfile = file
+    end
+    opts.on('--skip-restore', 'Skips restore after build completes') do
+      skip_restore = true
     end
   end
   opts.on('--docker', 'Use Docker to build or publish') do |_v|
@@ -107,7 +111,7 @@ elsif command == Samus::Builder
   Samus::Builder.build_version = ver.sub(/^v/, '')
 
   (ARGV.empty? ? ['samus.json'] : ARGV).each do |file|
-    command.new(file).build(dry_run, zip_release, outfile)
+    command.new(file).build(dry_run, zip_release, outfile, skip_restore)
   end
 else
   puts options

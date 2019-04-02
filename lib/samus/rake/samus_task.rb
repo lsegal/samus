@@ -83,12 +83,12 @@ module Samus
             "COPY . /build",
             config_copies.join("\n"),
             "RUN rm -rf /build/.samusprep",
-            "RUN samus build ${VERSION}"
+            "RUN samus build --skip-restore ${VERSION}"
           ].join("\n"))
         end
         fname
       end
-      
+
       def define
         namespace(@namespace) do
           desc '[VERSION=X.Y.Z] Builds a Samus release using Docker'

@@ -22,7 +22,7 @@ module Samus
       @manifest = {}
     end
 
-    def build(dry_run = false, zip_release = true, outfile = nil)
+    def build(dry_run = false, zip_release = true, outfile = nil, skip_restore = false)
       orig_pwd = Dir.pwd
       manifest = { 'version' => version, 'actions' => [] }
       build_branch = "samus-release/v#{version}"
@@ -60,6 +60,7 @@ module Samus
         end
       end
     ensure
+      return if skip_restore
       restore_git_repo
       system "git checkout -q #{orig_branch} 2>#{devnull}"
       system "git branch -qD #{build_branch} 2>#{devnull}"
