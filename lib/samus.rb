@@ -6,8 +6,8 @@ module Samus
 
   module Rake
     # Autoloads
-    autoload :ReleaseTask, File.expand_path('samus/rake/samus_task', __dir__)
-    autoload :DockerReleaseTask, File.expand_path('samus/rake/samus_task', __dir__)
+    autoload :ReleaseTask, File.expand_path('samus/rake/tasks', __dir__)
+    autoload :DockerReleaseTask, File.expand_path('samus/rake/tasks', __dir__)
   end
 
   module_function
