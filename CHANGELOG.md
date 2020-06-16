@@ -1,4 +1,6 @@
-# master
+# main
+
+- Improved support for alternate primary branch names
 
 # 3.0.8 - April 1st, 2019
 

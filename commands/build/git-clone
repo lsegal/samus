@@ -1,8 +1,15 @@
 #!/bin/sh
 
 set -e
-git clone -q --branch ${_BRANCH-master} \
+git clone -q $([ -n "$_BRANCH" ] && echo --branch $_BRANCH) \
   ${_REPOSITORY-.} $__BUILD_DIR/$1 2>${__DEVNULL-/dev/null}
+
+oldpw=`pwd`
+cd $__BUILD_DIR/$1
+for branch in `git branch --list --format="%(refname:lstrip=2)"`; do
+  git branch $branch --track origin/$branch 2>${__DEVNULL-/dev/null} || true
+done
+cd $oldpw
 
 # preserve all previously configured remotes for publish actions
 cp ${_REPOSITORY-.}/.git/config $__BUILD_DIR/$1/.git/config

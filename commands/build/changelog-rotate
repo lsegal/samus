@@ -2,7 +2,7 @@
 
 file = ARGV[0]
 ver = ENV['_VERSION']
-master = ENV['_MASTER'] || 'master'
+heading = ENV['_HEADING'] || ENV['_MASTER'] || ENV['__ORIG_BRANCH']
 title_fmt = ENV['_TITLE_FORMAT'] || "[$version] - %B %-d$day_nth, %Y"
 ENV['TZ'] ||= ENV['_TZ']
 
@@ -11,11 +11,11 @@ compare_url = `git config remote.origin.url`.strip.sub(/^git@(.+?):/, 'https://\
 day_nth = {1 => 'st', 2 => 'nd', 3 => 'rd'}[Time.now.day % 10] || 'th'
 title = Time.now.strftime(title_fmt).sub('$version', ver).sub('$day_nth', day_nth)
 
-match = /\A\s*# #{master}\r?\n(?<body>.*?)(?<rest>\r?\n# .+|\Z)/mis.match(content)
-raise "Failed to rotate changelog: #{file}" unless match
+match = /\A\s*# #{heading}\r?\n(?<body>.*?)(?<rest>\r?\n# .+|\Z)/mis.match(content)
+raise "Failed to rotate changelog: #{file} (invalid heading: #{heading})" unless match
 
 prev_ver = match['rest'][/(\d+\.\d+(?:\.\d+)?)/, 1]
-repl = "# #{master}\n\n# #{title}\n\n" +
+repl = "# #{heading}\n\n# #{title}\n\n" +
   (prev_ver ? "[#{ver}]: #{compare_url}/compare/v#{prev_ver}...v#{ver}\n" : '') +
   match['body'] + match['rest']
 File.open(file, 'w') {|f| f.write(repl) }

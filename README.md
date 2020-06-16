@@ -18,7 +18,7 @@ machine.
 Samus is a RubyGem and requires Ruby 1.9.x+. Installing is as easy as typing:
 
 ```sh
-$ gem install samus
+gem install samus
 ```
 
 If you would rather use Samus via Docker, see the Docker section in Usage below.
@@ -44,7 +44,7 @@ manifest file is just a list of discrete actions like so (minus comments):
       "action": "git-push",
       "arguments": {
         "remotes": "origin",
-        "refs": "master v1.5.0" // the v1.5.0 is a tag for your release
+        "refs": "main v1.5.0" // the v1.5.0 is a tag for your release
       }
     },
     {
@@ -91,9 +91,9 @@ it "samus.json" for easier integration:
       "files": ["lib/my-gem/version.rb"]
     },
     {
-      "action": "git-merge", // merge new commit into master branch
+      "action": "git-merge", // merge new commit into main branch
       "arguments": {
-        "branch": "master"
+        "branch": "main"
       }
     },
     {
@@ -103,7 +103,7 @@ it "samus.json" for easier integration:
         "action": "git-push",
         "arguments": {
           "remotes": "origin",
-          "refs": "master v$version"
+          "refs": "main v$version"
         }
       }]
     },
@@ -123,12 +123,12 @@ it "samus.json" for easier integration:
 ```
 
 It looks a little longer, but it contains all of the steps to automate when
-bumping the VERSION constant, tagging a version, merging into the master
+bumping the VERSION constant, tagging a version, merging into the primary
 branch, and building the gem. To build a release with this manifest, simply
 type:
 
 ```sh
-$ samus build 1.5.0
+samus build 1.5.0
 ```
 
 Samus will look for `samus.json` and build a release for version 1.5.0 of your
@@ -136,10 +136,10 @@ code. It will produce an archive called `release-v1.5.0.tar.gz` that you
 can then publish with:
 
 ```sh
-$ samus publish release-v1.5.0.tar.gz
+samus publish release-v1.5.0.tar.gz
 ```
 
-You may have noticed some funny looking "$version" strings in the above
+You may have noticed some funny looking "\$version" strings in the above
 manifest. Those strings will be replaced with the version provided in the
 build command, so all the correct tagging and building will be handled for you.
 
@@ -227,14 +227,14 @@ repositories. In this case, you can simply type `samus install REPO` to
 download the repository to your machine:
 
 ```sh
-$ samus install git@github.com:my_org/samus_config
+samus install git@github.com:my_org/samus_config
 ```
 
 Of course, Samus doesn't need these custom packages to be Git-backed. All
 the above command does is clone a repository into the ~/.samus directory.
 The above command creates:
 
-```
+```plaintext
 .samus/
   `- samus_config/
      `- commands/
@@ -274,18 +274,20 @@ commands directory depending on whether they are for `samus build` or
 In addition to exposing arguments as underscored environment variables,
 Samus also exposes a few special variables with double underscore prefixes:
 
-- `__build_dir` - this variable refers to the temporary directory that the
+- `__BUILD_DIR` - this variable refers to the temporary directory that the
   release package is being built inside of. The files inside of this directory,
   and _only_ the files inside of this directory, will be built into the release
   archive. If you write a build-time command that produces an output file which
   is part of the release, you should make sure to move it into this directory.
-- `__restore_file` - the restore file is a newline delimited file containing
+- `__ORIG_BRANCH` - the original branch being built from.
+- `__BUILD_BRANCH` - the name of the branch being built to.
+- `__RESTORE_FILE` - the restore file is a newline delimited file containing
   branches and their original ref. All branches listed in this file will be
   restored to the respective ref at the end of `samus build` regardless of
   success status. If you make destructive modifications to existing branches
   in the workspace repository, you should add the original ref for the branch
   to this file.
-- `__creds_*` - provides key, secret, and other values loaded from credentials.
+- `__CREDS_*` - provides key, secret, and other values loaded from credentials.
   See Credentials section for more information on how these are set.
 
 #### Help Files
@@ -295,14 +297,15 @@ command should include a file named `your-command.help.md` in the same directory
 as the command script itself. These files are Markdown-formatted files and
 should follow the same structure of the built-in command help files:
 
-```
+```markdown
 Short description of command.
 
-* Files:
-  * Description of what the command line arguments are
+- Files:
 
-* Arguments:
-  * argname: Documentation for argument
+  - Description of what the command line arguments are
+
+- Arguments:
+  - argname: Documentation for argument
 ```
 
 Notes:
@@ -425,7 +428,7 @@ property:
 
 The "condition" property is a Ruby expression that is evaluated for truthiness
 to decide if the action item should be evaluated or skipped. A common use for
-this is to take action based on the version (see "$version" variable section
+this is to take action based on the version (see "\$version" variable section
 below). The following example runs an action item only for version 2.0+ of a
 release:
 
@@ -437,9 +440,9 @@ release:
 }
 ```
 
-#### "$version" Variable
+#### "\$version" Variable
 
-A special variable "$version" is interpolated when loading the build manifest.
+A special variable "\$version" is interpolated when loading the build manifest.
 This variable can appear anywhere in the JSON document, and is interpolated
 before any actions or conditions are evaluated.
 

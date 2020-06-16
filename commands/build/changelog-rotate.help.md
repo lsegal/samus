@@ -8,7 +8,7 @@ Files:
 
 Arguments:
 
-- master: (optional) defaults to "master", should match the first development
+- heading: (optional) defaults to primary branch name, should match the first development
   heading used for in-flux changelog entries before rotation.
 - title_format: (optional) a `Time.strftime` date formatted string that can
   also include `$version` to represent the title of the rotated changelog entry.

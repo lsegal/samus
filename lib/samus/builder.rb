@@ -43,6 +43,7 @@ module Samus
                             '_RESTORE_FILE' => RESTORE_FILE,
                             '_BUILD_DIR' => build_dir,
                             '_BUILD_BRANCH' => build_branch,
+                            '_ORIG_BRANCH' => orig_branch,
                             '_DEVNULL' => devnull,
                             'VERSION' => version
                           }).load(action)

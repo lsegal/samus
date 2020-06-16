@@ -5,4 +5,4 @@ Files:
 
 Arguments:
   * repository: the location of the working copy repository, defaults to ".".
-  * branch:     the branch to clone, defaults to "master"
+  * branch:     the branch to clone, clones to default primary if not provided.
