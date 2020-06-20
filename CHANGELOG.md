@@ -1,5 +1,9 @@
 # main
 
+# 3.0.9 - June 19th, 2020
+
+[3.0.9]: https://github.com/lsegal/samus/compare/v3.0.8...v3.0.9
+
 - Improved support for alternate primary branch names
 
 # 3.0.8 - April 1st, 2019
