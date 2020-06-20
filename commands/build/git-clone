@@ -1,12 +1,17 @@
 #!/bin/sh
 
 set -e
+
+cd ${_REPOSITORY-.}
+BRANCHES=`git branch --list --format="%(refname:lstrip=2)"`
+
 git clone -q $([ -n "$_BRANCH" ] && echo --branch $_BRANCH) \
   ${_REPOSITORY-.} $__BUILD_DIR/$1 2>${__DEVNULL-/dev/null}
 
 oldpw=`pwd`
 cd $__BUILD_DIR/$1
-for branch in `git branch --list --format="%(refname:lstrip=2)"`; do
+for branch in $BRANCHES; do
+  echo Copying over $branch from repository.
   git branch $branch --track origin/$branch 2>${__DEVNULL-/dev/null} || true
 done
 cd $oldpw
